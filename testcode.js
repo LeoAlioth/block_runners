@@ -6,6 +6,8 @@ var vertices = [
 0.0,0.5,0.0,
 -0.25,0.25,0.0, 
 ];
+
+var indices = [0, 1, 2];
 var vertex_buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -92,3 +94,21 @@ gl.viewport(0,0,canvas.width,canvas.height);
 
 // Draw the triangle
 gl.drawArrays(gl.POINTS, 0, 3);
+
+
+         /*=========Drawing the triangle===========*/
+
+         // Clear the canvas
+         gl.clearColor(0.5, 0.5, 0.5, 0.9);
+
+         // Enable the depth test
+         gl.enable(gl.DEPTH_TEST);
+
+         // Clear the color buffer bit
+         gl.clear(gl.COLOR_BUFFER_BIT);
+
+         // Set the view port
+         gl.viewport(0,0,canvas.width,canvas.height);
+
+         // Draw the triangle
+         gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT,0);

@@ -33,30 +33,42 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="234" column="70" lean-forward="true" selection-start-line="234" selection-start-column="70" selection-end-line="234" selection-end-column="70" />
+            <state relative-caret-position="205">
+              <caret line="388" column="37" lean-forward="false" selection-start-line="388" selection-start-column="37" selection-end-line="388" selection-end-column="37" />
               <folding>
-                <element signature="e#622#624#0" expanded="false" />
+                <element signature="e#710#712#0" expanded="false" />
                 <element signature="n#!!block;n#mvPushMatrix#0" expanded="false" />
                 <element signature="n#!!block;n#mvPopMatrix#0" expanded="false" />
                 <element signature="n#!!block;n#degToRad#0" expanded="false" />
-                <element signature="e#1128#1130#0" expanded="false" />
+                <element signature="e#1216#1218#0" expanded="false" />
                 <element signature="n#!!block;n#initGL#0" expanded="false" />
-                <element signature="e#1758#1760#0" expanded="false" />
+                <element signature="e#1846#1848#0" expanded="false" />
                 <element signature="n#!!block;n#getShader#0" expanded="false" />
-                <element signature="e#3178#3180#0" expanded="false" />
+                <element signature="e#3266#3268#0" expanded="false" />
                 <element signature="n#!!block;n#initShaders#0" expanded="false" />
-                <element signature="e#4809#4811#0" expanded="false" />
+                <element signature="e#4897#4899#0" expanded="false" />
                 <element signature="n#!!block;n#setMatrixUniforms#0" expanded="false" />
-                <element signature="e#5092#5094#0" expanded="false" />
-                <element signature="e#8687#8689#0" expanded="false" />
-                <element signature="e#10535#10537#0" expanded="false" />
+                <element signature="e#5180#5182#0" expanded="false" />
+                <element signature="e#8068#8820#0" expanded="false" />
+                <element signature="e#11138#11140#0" expanded="false" />
+                <element signature="e#14174#14176#0" expanded="false" />
                 <element signature="n#!!block;n#animate#0" expanded="false" />
-                <element signature="e#10871#10873#0" expanded="false" />
+                <element signature="e#14510#14512#0" expanded="false" />
                 <element signature="n#!!block;n#handleKeyDown#0" expanded="false" />
                 <element signature="n#!!block;n#handleKeyUp#0" expanded="false" />
-                <element signature="e#11714#11716#0" expanded="false" />
+                <element signature="n#!!block;n#handleKeys#0" expanded="false" />
+                <element signature="e#15353#15355#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="glMatrix-0.9.5.min.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/glMatrix-0.9.5.min.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="326">
+              <caret line="23" column="261" lean-forward="false" selection-start-line="23" selection-start-column="250" selection-end-line="23" selection-end-column="261" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -130,10 +142,14 @@
       <find>vertexPosition</find>
       <find>currently</find>
       <find>positionc</find>
+      <find>cube</find>
       <find>andlekeydown</find>
+      <find>perspective</find>
+      <find>pmatr</find>
     </findStrings>
     <replaceStrings>
       <replace>cube</replace>
+      <replace>world</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -243,7 +259,7 @@
       <workItem from="1513686471505" duration="43000" />
       <workItem from="1513686516946" duration="5964000" />
       <workItem from="1513696575930" duration="785000" />
-      <workItem from="1513699681275" duration="6144000" />
+      <workItem from="1513699681275" duration="8835000" />
     </task>
     <task id="LOCAL-00001" summary="a rotating cube is now moving">
       <created>1513704817844</created>
@@ -252,16 +268,24 @@
       <option name="project" value="LOCAL" />
       <updated>1513704817845</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="a rotating cube is now moving">
+      <created>1513710528509</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1513710528509</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13194000" />
+    <option name="totallyTimeSpent" value="15885000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17715959" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17715959" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32917318" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -293,7 +317,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -314,26 +338,28 @@
         <state relative-caret-position="170">
           <caret line="10" column="26" lean-forward="true" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
           <folding>
-            <element signature="e#622#624#0" expanded="false" />
+            <element signature="e#710#712#0" expanded="false" />
             <element signature="n#!!block;n#mvPushMatrix#0" expanded="false" />
             <element signature="n#!!block;n#mvPopMatrix#0" expanded="false" />
             <element signature="n#!!block;n#degToRad#0" expanded="false" />
-            <element signature="e#1128#1130#0" expanded="false" />
+            <element signature="e#1216#1218#0" expanded="false" />
             <element signature="n#!!block;n#initGL#0" expanded="false" />
-            <element signature="e#1758#1760#0" expanded="false" />
+            <element signature="e#1846#1848#0" expanded="false" />
             <element signature="n#!!block;n#getShader#0" expanded="false" />
-            <element signature="e#3178#3180#0" expanded="false" />
+            <element signature="e#3266#3268#0" expanded="false" />
             <element signature="n#!!block;n#initShaders#0" expanded="false" />
-            <element signature="e#4809#4811#0" expanded="false" />
+            <element signature="e#4897#4899#0" expanded="false" />
             <element signature="n#!!block;n#setMatrixUniforms#0" expanded="false" />
-            <element signature="e#5092#5094#0" expanded="false" />
-            <element signature="e#8687#8689#0" expanded="false" />
-            <element signature="e#10535#10537#0" expanded="false" />
+            <element signature="e#5180#5182#0" expanded="false" />
+            <element signature="e#8068#8820#0" expanded="false" />
+            <element signature="e#11138#11140#0" expanded="false" />
+            <element signature="e#14174#14176#0" expanded="false" />
             <element signature="n#!!block;n#animate#0" expanded="false" />
-            <element signature="e#10871#10873#0" expanded="false" />
+            <element signature="e#14510#14512#0" expanded="false" />
             <element signature="n#!!block;n#handleKeyDown#0" expanded="false" />
             <element signature="n#!!block;n#handleKeyUp#0" expanded="false" />
-            <element signature="e#11714#11716#0" expanded="false" />
+            <element signature="n#!!block;n#handleKeys#0" expanded="false" />
+            <element signature="e#15353#15355#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -354,26 +380,28 @@
         <state relative-caret-position="986">
           <caret line="58" column="18" lean-forward="true" selection-start-line="58" selection-start-column="18" selection-end-line="58" selection-end-column="18" />
           <folding>
-            <element signature="e#622#624#0" expanded="false" />
+            <element signature="e#710#712#0" expanded="false" />
             <element signature="n#!!block;n#mvPushMatrix#0" expanded="false" />
             <element signature="n#!!block;n#mvPopMatrix#0" expanded="false" />
             <element signature="n#!!block;n#degToRad#0" expanded="false" />
-            <element signature="e#1128#1130#0" expanded="false" />
+            <element signature="e#1216#1218#0" expanded="false" />
             <element signature="n#!!block;n#initGL#0" expanded="false" />
-            <element signature="e#1758#1760#0" expanded="false" />
+            <element signature="e#1846#1848#0" expanded="false" />
             <element signature="n#!!block;n#getShader#0" expanded="false" />
-            <element signature="e#3178#3180#0" expanded="false" />
+            <element signature="e#3266#3268#0" expanded="false" />
             <element signature="n#!!block;n#initShaders#0" expanded="false" />
-            <element signature="e#4809#4811#0" expanded="false" />
+            <element signature="e#4897#4899#0" expanded="false" />
             <element signature="n#!!block;n#setMatrixUniforms#0" expanded="false" />
-            <element signature="e#5092#5094#0" expanded="false" />
-            <element signature="e#8687#8689#0" expanded="false" />
-            <element signature="e#10535#10537#0" expanded="false" />
+            <element signature="e#5180#5182#0" expanded="false" />
+            <element signature="e#8068#8820#0" expanded="false" />
+            <element signature="e#11138#11140#0" expanded="false" />
+            <element signature="e#14174#14176#0" expanded="false" />
             <element signature="n#!!block;n#animate#0" expanded="false" />
-            <element signature="e#10871#10873#0" expanded="false" />
+            <element signature="e#14510#14512#0" expanded="false" />
             <element signature="n#!!block;n#handleKeyDown#0" expanded="false" />
             <element signature="n#!!block;n#handleKeyUp#0" expanded="false" />
-            <element signature="e#11714#11716#0" expanded="false" />
+            <element signature="n#!!block;n#handleKeys#0" expanded="false" />
+            <element signature="e#15353#15355#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -470,31 +498,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/glMatrix-0.9.5.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="23" column="261" lean-forward="false" selection-start-line="23" selection-start-column="250" selection-end-line="23" selection-end-column="261" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="234" column="70" lean-forward="true" selection-start-line="234" selection-start-column="70" selection-end-line="234" selection-end-column="70" />
+        <state relative-caret-position="205">
+          <caret line="388" column="37" lean-forward="false" selection-start-line="388" selection-start-column="37" selection-end-line="388" selection-end-column="37" />
           <folding>
-            <element signature="e#622#624#0" expanded="false" />
+            <element signature="e#710#712#0" expanded="false" />
             <element signature="n#!!block;n#mvPushMatrix#0" expanded="false" />
             <element signature="n#!!block;n#mvPopMatrix#0" expanded="false" />
             <element signature="n#!!block;n#degToRad#0" expanded="false" />
-            <element signature="e#1128#1130#0" expanded="false" />
+            <element signature="e#1216#1218#0" expanded="false" />
             <element signature="n#!!block;n#initGL#0" expanded="false" />
-            <element signature="e#1758#1760#0" expanded="false" />
+            <element signature="e#1846#1848#0" expanded="false" />
             <element signature="n#!!block;n#getShader#0" expanded="false" />
-            <element signature="e#3178#3180#0" expanded="false" />
+            <element signature="e#3266#3268#0" expanded="false" />
             <element signature="n#!!block;n#initShaders#0" expanded="false" />
-            <element signature="e#4809#4811#0" expanded="false" />
+            <element signature="e#4897#4899#0" expanded="false" />
             <element signature="n#!!block;n#setMatrixUniforms#0" expanded="false" />
-            <element signature="e#5092#5094#0" expanded="false" />
-            <element signature="e#8687#8689#0" expanded="false" />
-            <element signature="e#10535#10537#0" expanded="false" />
+            <element signature="e#5180#5182#0" expanded="false" />
+            <element signature="e#8068#8820#0" expanded="false" />
+            <element signature="e#11138#11140#0" expanded="false" />
+            <element signature="e#14174#14176#0" expanded="false" />
             <element signature="n#!!block;n#animate#0" expanded="false" />
-            <element signature="e#10871#10873#0" expanded="false" />
+            <element signature="e#14510#14512#0" expanded="false" />
             <element signature="n#!!block;n#handleKeyDown#0" expanded="false" />
             <element signature="n#!!block;n#handleKeyUp#0" expanded="false" />
-            <element signature="e#11714#11716#0" expanded="false" />
+            <element signature="n#!!block;n#handleKeys#0" expanded="false" />
+            <element signature="e#15353#15355#0" expanded="false" />
           </folding>
         </state>
       </provider>

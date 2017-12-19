@@ -7,6 +7,9 @@ var shaderProgram;
 var cubeVertexPositionBuffer;
 var cubeVertexColorBuffer;
 var cubeVertexIndexBuffer;
+var worldVertexPositionBuffer;
+var worldVertexColorBuffer;
+var worldVertexIndexBuffer;
 
 
 // Model-View and Projection matrices
@@ -24,7 +27,7 @@ var lastTime = 0;
 var currentlyPressedKeys = {};
 
 // Variables for storing current position of cube
-var positionCube = [0.0, 0.0, -7.0];
+var positionCube = [0.0, -1.0, -7.0];
 
 
 //
@@ -185,6 +188,72 @@ function setMatrixUniforms() {
 // two objects -- a simple two-dimensional pyramid and cube.
 //
 function initBuffers() {
+
+    // WORLD PLANE
+    // Create a buffer for the cube's vertices.
+    worldVertexPositionBuffer = gl.createBuffer();
+
+    // Select the cubeVertexPositionBuffer as the one to apply vertex
+    // operations to from here out.
+    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer);
+
+    // Now create an array of vertices for the cube.
+    vertices = [
+        // MAIN PLANE
+        -10.0, 0.0, -10.0,
+        10.0, 0.0, -10.0,
+        10.0, 0.0,  10.0,
+        -10.0, 0.0,  10.0
+    ];
+
+    // Now pass the list of vertices into WebGL to build the shape. We
+    // do this by creating a Float32Array from the JavaScript array,
+    // then use it to fill the current vertex buffer.
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    worldVertexPositionBuffer.itemSize = 3;
+    worldVertexPositionBuffer.numItems = 4;
+
+    // Now set up the colors for the vertices. We'll use solid colors
+    // for each face.
+    worldVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexColorBuffer);
+    colors = [
+        [0.5, 0.5, 0.5, 1.0], // PlaneColor1
+    ];
+
+    // Convert the array of colors into a table for all the vertices.
+    var unpackedColors = [];
+    for (var i in colors) {
+        var color = colors[i];
+
+        // Repeat each color four times for the four vertices of the face
+        for (var j=0; j < 4; j++) {
+            unpackedColors = unpackedColors.concat(color);
+        }
+    }
+
+    // Pass the colors into WebGL
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
+    worldVertexColorBuffer.itemSize = 4;
+    worldVertexColorBuffer.numItems = 4;
+
+    // Build the element array buffer; this specifies the indices
+    // into the vertex array for each face's vertices.
+    worldVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, worldVertexIndexBuffer);
+
+    // This array defines each face as two triangles, using the
+    // indices into the vertex array to specify each triangle's
+    // position.
+    var worldVertexIndices = [
+        2, 1, 0,      3, 2, 0,    // MAIN PLANE
+    ];
+
+    // Now send the element array to GL
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(worldVertexIndices), gl.STATIC_DRAW);
+    worldVertexIndexBuffer.itemSize = 1;
+    worldVertexIndexBuffer.numItems = 6;
+
     // CUBE
     // Create a buffer for the cube's vertices.
     cubeVertexPositionBuffer = gl.createBuffer();
@@ -230,7 +299,7 @@ function initBuffers() {
         -1.0, -1.0,  1.0,
         -1.0,  1.0,  1.0,
         -1.0,  1.0, -1.0
-    ];
+    ]
 
     // Now pass the list of vertices into WebGL to build the shape. We
     // do this by creating a Float32Array from the JavaScript array,
@@ -313,7 +382,38 @@ function drawScene() {
     // the center of the scene.
     mat4.identity(mvMatrix);
 
+    // WORLD PLANE
+
+    // Now move the drawing position a bit to where we want to start
+    // drawing the world.
+    mat4.translate(mvMatrix, [0.0, -2.0, -7.0]);
+
+    // Save the current matrix, then rotate before we draw.
+    mvPushMatrix();
+
+    // Draw the world by binding the array buffer to the world's vertices
+    // array, setting attributes, and pushing it to GL.
+    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, worldVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    // Set the colors attribute for the vertices.
+    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, worldVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, worldVertexIndexBuffer);
+
+    // Draw the world.
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, worldVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    // Restore the original matrix
+    mvPopMatrix();
+
     // CUBE:
+
+    // Set the drawing position to the "identity" point, which is
+    // the center of the scene.
+    mat4.identity(mvMatrix);
 
     // Now move the drawing position a bit to where we want to start
     // drawing the cube.

@@ -247,6 +247,7 @@ function initBuffers() {
         [1.0, 0.0, 0.0, 1.0], // Front face
         [1.0, 1.0, 0.0, 1.0], // Back face
         [0.0, 1.0, 0.0, 1.0], // Top face
+
         [1.0, 0.5, 0.5, 1.0], // Bottom face
         [1.0, 0.0, 1.0, 1.0], // Right face
         [0.0, 0.0, 1.0, 1.0]  // Left face

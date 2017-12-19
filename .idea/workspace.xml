@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0c87806-e078-4878-acb9-9c2e88c7c1fd" name="Default" comment="made a world plane">
+    <list default="true" id="f0c87806-e078-4878-acb9-9c2e88c7c1fd" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -258,7 +258,7 @@
       <workItem from="1513686471505" duration="43000" />
       <workItem from="1513686516946" duration="5964000" />
       <workItem from="1513696575930" duration="785000" />
-      <workItem from="1513699681275" duration="9410000" />
+      <workItem from="1513699681275" duration="9427000" />
     </task>
     <task id="LOCAL-00001" summary="a rotating cube is now moving">
       <created>1513704817844</created>
@@ -288,11 +288,18 @@
       <option name="project" value="LOCAL" />
       <updated>1513713263899</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Merging">
+      <created>1513713804112</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1513713804112</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16460000" />
+    <option name="totallyTimeSpent" value="16477000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
@@ -327,7 +334,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="a rotating cube is now moving" />
     <MESSAGE value="made a world plane" />
-    <option name="LAST_COMMIT_MESSAGE" value="made a world plane" />
+    <MESSAGE value="Merging" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merging" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

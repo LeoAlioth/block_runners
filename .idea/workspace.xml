@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f0c87806-e078-4878-acb9-9c2e88c7c1fd" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/scripts/main.js" afterPath="$PROJECT_DIR$/scripts/main.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -33,8 +32,8 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="388" column="37" lean-forward="false" selection-start-line="388" selection-start-column="37" selection-end-line="388" selection-end-column="37" />
+            <state relative-caret-position="256">
+              <caret line="391" column="19" lean-forward="true" selection-start-line="391" selection-start-column="19" selection-end-line="391" selection-end-column="19" />
               <folding>
                 <element signature="e#710#712#0" expanded="false" />
                 <element signature="n#!!block;n#mvPushMatrix#0" expanded="false" />
@@ -259,7 +258,7 @@
       <workItem from="1513686471505" duration="43000" />
       <workItem from="1513686516946" duration="5964000" />
       <workItem from="1513696575930" duration="785000" />
-      <workItem from="1513699681275" duration="8835000" />
+      <workItem from="1513699681275" duration="8877000" />
     </task>
     <task id="LOCAL-00001" summary="a rotating cube is now moving">
       <created>1513704817844</created>
@@ -275,11 +274,18 @@
       <option name="project" value="LOCAL" />
       <updated>1513710528509</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="made a world plane">
+      <created>1513713234306</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1513713234306</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15885000" />
+    <option name="totallyTimeSpent" value="15927000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
@@ -313,7 +319,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="a rotating cube is now moving" />
-    <option name="LAST_COMMIT_MESSAGE" value="a rotating cube is now moving" />
+    <MESSAGE value="made a world plane" />
+    <option name="LAST_COMMIT_MESSAGE" value="made a world plane" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -508,8 +515,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="388" column="37" lean-forward="false" selection-start-line="388" selection-start-column="37" selection-end-line="388" selection-end-column="37" />
+        <state relative-caret-position="256">
+          <caret line="391" column="19" lean-forward="true" selection-start-line="391" selection-start-column="19" selection-end-line="391" selection-end-column="19" />
           <folding>
             <element signature="e#710#712#0" expanded="false" />
             <element signature="n#!!block;n#mvPushMatrix#0" expanded="false" />

@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f0c87806-e078-4878-acb9-9c2e88c7c1fd" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/BlockRunners.html" afterPath="$PROJECT_DIR$/BlockRunners.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -106,8 +105,8 @@
       <file leaf-file-name="14-specular.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../webgl-lessons/14-specular.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-274">
-              <caret line="108" column="17" lean-forward="false" selection-start-line="8" selection-start-column="8" selection-end-line="108" selection-end-column="17" />
+            <state relative-caret-position="202">
+              <caret line="136" column="13" lean-forward="true" selection-start-line="136" selection-start-column="13" selection-end-line="136" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -254,7 +253,7 @@
       <workItem from="1513696575930" duration="785000" />
       <workItem from="1513699681275" duration="9624000" />
       <workItem from="1514316266551" duration="4000" />
-      <workItem from="1514373844501" duration="2390000" />
+      <workItem from="1514373844501" duration="3020000" />
     </task>
     <task id="LOCAL-00001" summary="a rotating cube is now moving">
       <created>1513704817844</created>
@@ -298,11 +297,18 @@
       <option name="project" value="LOCAL" />
       <updated>1513713811618</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="trying to create point shader">
+      <created>1514376324508</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1514376324509</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19068000" />
+    <option name="totallyTimeSpent" value="19698000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
@@ -338,7 +344,8 @@
     <MESSAGE value="a rotating cube is now moving" />
     <MESSAGE value="made a world plane" />
     <MESSAGE value="Merging" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merging" />
+    <MESSAGE value="trying to create point shader" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to create point shader" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1016,8 +1023,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../webgl-lessons/14-specular.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-274">
-          <caret line="108" column="17" lean-forward="false" selection-start-line="8" selection-start-column="8" selection-end-line="108" selection-end-column="17" />
+        <state relative-caret-position="202">
+          <caret line="136" column="13" lean-forward="true" selection-start-line="136" selection-start-column="13" selection-end-line="136" selection-end-column="13" />
           <folding />
         </state>
       </provider>

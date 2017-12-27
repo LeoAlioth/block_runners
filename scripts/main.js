@@ -10,8 +10,8 @@ var cubeVertexTextureCoordBuffer;
 var cubeVertexIndexBuffer;
 
 var worldVertexPositionBuffer;
-var worldVertexNormalBuffer
-var worldVertexTextureBuffer;
+var worldVertexNormalBuffer;
+var worldVertexTextureCoordBuffer;
 var worldVertexIndexBuffer;
 
 
@@ -28,7 +28,7 @@ var lastTime = 0;
 
 // Variable for storing textures
 var cubeTexture;
-var worldTexture
+var worldTexture;
 
 // Variable that stores  loading state of textures.
 var numberOfTextures = 2;
@@ -253,7 +253,7 @@ function initBuffers() {
         0.0, -1.0,  0.0,
         0.0, -1.0,  0.0,
         0.0, -1.0,  0.0,
-        0.0, -1.0,  0.0,
+        0.0, -1.0,  0.0
     ];
 
     // Pass the normals into WebGL
@@ -271,7 +271,7 @@ function initBuffers() {
         1.0, 1.0,
         0.0, 1.0,
         0.0, 0.0,
-        1.0, 0.0,
+        1.0, 0.0
     ];
 
     // Pass the texture coordinates into WebGL
@@ -285,7 +285,7 @@ function initBuffers() {
     worldVertexIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, worldVertexIndexBuffer);
     var worldVertexIndices = [
-        2, 1, 0,      3, 2, 0,    // MAIN PLANE
+        2, 1, 0,      3, 2, 0    // MAIN PLANE
     ];
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(worldVertexIndices), gl.STATIC_DRAW);
     worldVertexIndexBuffer.itemSize = 1;
@@ -653,6 +653,8 @@ function initTextures() {
         handleTextureLoaded(cubeTexture);
     };
     cubeTexture.image.src = "./assets/cube.gif";
+
+    console.log("initializing textures");
 }
 
 function handleTextureLoaded(texture) {
@@ -666,6 +668,8 @@ function handleTextureLoaded(texture) {
     gl.generateMipmap(gl.TEXTURE_2D);
 
     gl.bindTexture(gl.TEXTURE_2D, null);
+
+    console.log("loading texture");
 
     // when texture loading is finished we can draw scene.
     texturesLoaded += 1;
@@ -706,7 +710,7 @@ function start() {
 
         // Set up to draw the scene periodically every 15ms.
         setInterval(function() {
-            if (texturesLoaded == numberOfTextures) {
+            if (texturesLoaded === numberOfTextures) {
                 requestAnimationFrame(animate);
                 handleKeys();
                 drawScene();

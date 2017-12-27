@@ -506,7 +506,7 @@ function drawScene() {
 
     // Activate textures
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, cubeTexture);
+    gl.bindTexture(gl.TEXTURE_2D, worldTexture);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
 
     // world:
@@ -546,6 +546,8 @@ function drawScene() {
 
     // Restore the original matrix
     mvPopMatrix();
+
+    mvPushMatrix();
 
     // CUBE:
 
@@ -643,24 +645,26 @@ function initTextures() {
     worldTexture = gl.createTexture();
     worldTexture.image = new Image();
     worldTexture.image.onload = function () {
-        handleTextureLoaded(worldTexture);
+        handleTextureLoaded(worldTexture)
     };
     worldTexture.image.src = "./assets/wall.png";
-    
+
+    console.log("initializing world");
+
     cubeTexture = gl.createTexture();
     cubeTexture.image = new Image();
     cubeTexture.image.onload = function () {
         handleTextureLoaded(cubeTexture);
     };
-    cubeTexture.image.src = "./assets/cube.gif";
+    cubeTexture.image.src = "./assets/crate.gif";
 
-    console.log("initializing textures");
+    console.log("initializing cube");
 }
 
 function handleTextureLoaded(texture) {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-    // Third texture usus Linear interpolation approximation with nearest Mipmap selection
+    // Third texture uses Linear interpolation approximation with nearest Mipmap selection
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -669,7 +673,7 @@ function handleTextureLoaded(texture) {
 
     gl.bindTexture(gl.TEXTURE_2D, null);
 
-    console.log("loading texture");
+    console.log(texture);
 
     // when texture loading is finished we can draw scene.
     texturesLoaded += 1;
@@ -683,7 +687,7 @@ function handleTextureLoaded(texture) {
 // Figuratively, that is. There's nothing moving in this demo.
 //
 function start() {
-    canvas = document.getElementById("glcanvas");
+    canvas = document.getElementById("glCanvas");
 
     gl = initGL(canvas);      // Initialize the GL context
 

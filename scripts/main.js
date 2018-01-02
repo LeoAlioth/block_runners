@@ -46,6 +46,10 @@ var currentlyPressedKeys = {};
 var jump = false;
 var positionCube = [0.0, -1.0, -7.0];
 var rotationCube = [0.0, 0.0, 0.0];
+var moveSpeedCube = [0.0, 0.0, -1,0];
+var rotationSpeedCube = [0.0, 0.0, 0.0];
+var onGround = true;
+
 
 
 //
@@ -671,10 +675,26 @@ function animate() {
         var elapsed = timeNow - lastTime;
 
         // rotate pyramid and cube for a small amount
-        if (jump) {
-            rotationCube[1] += (10 * elapsed) / 1000.0;
+        if (jump && onGround) {
+            moveSpeedCube[1] = 10;
+            onGround = false;
             jump = false;
         }
+        if(!onGround){
+            moveSpeedCube[1] -= 30*elapsed/1000;
+            positionCube[1] += moveSpeedCube[1]*elapsed/1000;
+        }
+
+        if(positionCube[1]<=-1 && !onGround){
+            positionCube[1]= -1;
+            moveSpeedCube[1] = 0;
+            onGround = true;
+            jump = false
+        }
+        positionCube[0] += moveSpeedCube[0]*elapsed/1000;
+        positionCube[2] += moveSpeedCube[2]*elapsed/1000;
+
+
     }
     lastTime = timeNow;
 }
@@ -698,19 +718,19 @@ function handleKeyUp(event) {
 function handleKeys() {
     if (currentlyPressedKeys[37]) {
         // Left cursor key
-        positionCube[0] -= 0.1;
+        moveSpeedCube[0] -= 0.1;
     }
     if (currentlyPressedKeys[39]) {
         // Right cursor key
-        positionCube[0] += 0.1;
+        moveSpeedCube[0] += 0.1;
     }
     if (currentlyPressedKeys[38]) {
         // Up cursor key
-        positionCube[2] -= 0.1;
+        moveSpeedCube[2] -= 0.1;
     }
     if (currentlyPressedKeys[40]) {
         // Down cursor key
-        positionCube[2] += 0.1;
+        moveSpeedCube[2] += 0.1;
     }
     if (currentlyPressedKeys[32]) {
         // Down cursor key

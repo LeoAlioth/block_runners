@@ -3,22 +3,21 @@ var canvas;
 var gl;
 
 // shading programs
-var currentProgram;
-var perVertexProgram;
-var perFragmentProgram;
+var shaderProgram;
 
+class GameObject{
+    constructor(){
+        this.VertexPositionBuffer;
+        this.VertexNormalBuffer;
+        this.VertexTextureCoordBuffer;
+        this.VertexIndexBuffer;
+    }
+}
 
 // Buffers
-var cubeVertexPositionBuffer;
-var cubeVertexNormalBuffer;
-var cubeVertexTextureCoordBuffer;
-var cubeVertexIndexBuffer;
 
-var worldVertexPositionBuffer;
-var worldVertexNormalBuffer;
-var worldVertexTextureCoordBuffer;
-var worldVertexIndexBuffer;
-
+var cube = new GameObject();
+var world = new GameObject();
 
 // Model-View and Projection matrices
 var mvMatrixStack = [];
@@ -46,6 +45,9 @@ var currentlyPressedKeys = {};
 // Variables for storing current position of cube
 var positionCube = [0.0, -1.0, -7.0];
 
+var xPosition = 0;
+var yPosition = 0.4;
+var zPosition = 0;
 
 //
 // Matrix utility functions
@@ -274,35 +276,35 @@ function handleTextureLoaded(texture) {
 // two objects -- a simple two-dimensional pyramid and cube.
 //
 function initBuffers() {
-    
+
 
     // WORLD PLANE
     // Create a buffer for the cube's vertices.
-    worldVertexPositionBuffer = gl.createBuffer();
+    world.VertexPositionBuffer = gl.createBuffer();
 
-    // Select the worldVertexPositionBuffer as the one to apply vertex
+    // Select the world.VertexPositionBuffer as the one to apply vertex
     // operations to from here out.
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexPositionBuffer);
 
     // Now create an array of vertices for the world.
     vertices = [
         // MAIN PLANE
-        -10.0, 0.0, -10.0,
-        10.0, 0.0, -10.0,
-        10.0, 0.0,  10.0,
-        -10.0, 0.0,  10.0
+        -5.0, 0.0, -50.0,
+        5.0, 0.0, -50.0,
+        5.0, 0.0,  5.0,
+        -5.0, 0.0,  5.0
     ];
 
     // Now pass the list of vertices into WebGL to build the shape. We
     // do this by creating a Float32Array from the JavaScript array,
     // then use it to fill the current vertex buffer.
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    worldVertexPositionBuffer.itemSize = 3;
-    worldVertexPositionBuffer.numItems = 4;
+    world.VertexPositionBuffer.itemSize = 3;
+    world.VertexPositionBuffer.numItems = 4;
 
     // Map the normals onto the world's faces.
-    worldVertexNormalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexNormalBuffer);
+    world.VertexNormalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexNormalBuffer);
 
     // Now create an array of vertex normals for the world.
     var vertexNormals = [
@@ -315,12 +317,12 @@ function initBuffers() {
 
     // Pass the normals into WebGL
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-    worldVertexNormalBuffer.itemSize = 3;
-    worldVertexNormalBuffer.numItems = 4;
+    world.VertexNormalBuffer.itemSize = 3;
+    world.VertexNormalBuffer.numItems = 4;
 
     // Now create an array of texture coordinates for the world.
-    worldVertexTextureCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer);
+    world.VertexTextureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexTextureCoordBuffer);
 
     // Now create an array of vertex texture coordinates for the world.
     var textureCoords = [
@@ -333,28 +335,28 @@ function initBuffers() {
 
     // Pass the texture coordinates into WebGL
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
-    worldVertexTextureCoordBuffer.itemSize = 2;
-    worldVertexTextureCoordBuffer.numItems = 4;
+    world.VertexTextureCoordBuffer.itemSize = 2;
+    world.VertexTextureCoordBuffer.numItems = 4;
 
     // This array defines each face as two triangles, using the
     // indices into the vertex array to specify each triangle's
     // position.
-    worldVertexIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, worldVertexIndexBuffer);
+    world.VertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, world.VertexIndexBuffer);
     var worldVertexIndices = [
         2, 1, 0,      3, 2, 0    // MAIN PLANE
     ];
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(worldVertexIndices), gl.STATIC_DRAW);
-    worldVertexIndexBuffer.itemSize = 1;
-    worldVertexIndexBuffer.numItems = 6;
+    world.VertexIndexBuffer.itemSize = 1;
+    world.VertexIndexBuffer.numItems = 6;
 
     //CUBE
     // Create a buffer for the cube's vertices.
-    cubeVertexPositionBuffer = gl.createBuffer();
+    cube.VertexPositionBuffer = gl.createBuffer();
 
-    // Select the cubeVertexPositionBuffer as the one to apply vertex
+    // Select the cube.VertexPositionBuffer as the one to apply vertex
     // operations to from here out.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexPositionBuffer);
 
     // Now create an array of vertices for the cube.
     vertices = [
@@ -399,12 +401,12 @@ function initBuffers() {
     // do this by creating a Float32Array from the JavaScript array,
     // then use it to fill the current vertex buffer.
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    cubeVertexPositionBuffer.itemSize = 3;
-    cubeVertexPositionBuffer.numItems = 24;
+    cube.VertexPositionBuffer.itemSize = 3;
+    cube.VertexPositionBuffer.numItems = 24;
 
     // Map the normals onto the cube's faces.
-    cubeVertexNormalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+    cube.VertexNormalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexNormalBuffer);
 
     // Now create an array of vertex normals for the cube.
     var vertexNormals = [
@@ -447,12 +449,12 @@ function initBuffers() {
 
     // Pass the normals into WebGL
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-    cubeVertexNormalBuffer.itemSize = 3;
-    cubeVertexNormalBuffer.numItems = 24;
+    cube.VertexNormalBuffer.itemSize = 3;
+    cube.VertexNormalBuffer.numItems = 24;
 
     // Now create an array of texture coordinates for the cube.
-    cubeVertexTextureCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+    cube.VertexTextureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexTextureCoordBuffer);
 
     // Now create an array of vertex texture coordinates for the cube.
     var textureCoords = [
@@ -495,14 +497,14 @@ function initBuffers() {
 
     // Pass the texture coordinates into WebGL
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
-    cubeVertexTextureCoordBuffer.itemSize = 2;
-    cubeVertexTextureCoordBuffer.numItems = 24;
+    cube.VertexTextureCoordBuffer.itemSize = 2;
+    cube.VertexTextureCoordBuffer.numItems = 24;
 
     // This array defines each face as two triangles, using the
     // indices into the vertex array to specify each triangle's
     // position.
-    cubeVertexIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+    cube.VertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.VertexIndexBuffer);
     var cubeVertexIndices = [
         0, 1, 2,      0, 2, 3,    // Front face
         4, 5, 6,      4, 6, 7,    // Back face
@@ -512,8 +514,8 @@ function initBuffers() {
         20, 21, 22,   20, 22, 23  // Left face
     ];
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
-    cubeVertexIndexBuffer.itemSize = 1;
-    cubeVertexIndexBuffer.numItems = 36;
+    cube.VertexIndexBuffer.itemSize = 1;
+    cube.VertexIndexBuffer.numItems = 36;
 
 }
 
@@ -537,10 +539,13 @@ function drawScene() {
     gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);
     gl.uniform1i(shaderProgram.useLightingUniform, lighting);
     gl.uniform1i(shaderProgram.useTexturesUniform, true);
+    gl.uniform1f(shaderProgram.materialShininessUniform, 1000);
 
     // Set the drawing position to the "identity" point, which is
     // the center of the scene.
     mat4.identity(mvMatrix);
+
+    cameraPosition(xPosition, yPosition, zPosition);
 
    // set uniforms for lights as defined in the document
     if (lighting) {
@@ -590,16 +595,16 @@ function drawScene() {
     mvPushMatrix();
 
     // Set the vertex positions attribute for the world vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, worldVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, world.VertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the normals attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, worldVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, world.VertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the texture coordinates attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, worldVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, world.VertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Activate textures
     gl.activeTexture(gl.TEXTURE0);
@@ -607,9 +612,9 @@ function drawScene() {
     gl.uniform1i(shaderProgram.samplerUniform, 0);
 
     // Draw the world.
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, worldVertexIndexBuffer);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, world.VertexIndexBuffer);
     setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, worldVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(gl.TRIANGLES, world.VertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
     // Restore the original matrix
     mvPopMatrix();
@@ -631,27 +636,26 @@ function drawScene() {
     mat4.rotate(mvMatrix, degToRad(rotationCube), [1, 1, 1]);
 
     // Set the vertex positions attribute for the cube vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cube.VertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the normals attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cube.VertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the texture coordinates attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cube.VertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Activate textures
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, cubeTexture);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
 
-    gl.uniform1f(shaderProgram.materialShininessUniform, 1000);
     // Draw the cube.
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.VertexIndexBuffer);
     setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(gl.TRIANGLES, cube.VertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
     // Restore the original matrix
     mvPopMatrix();
@@ -670,6 +674,9 @@ function animate() {
         // rotate pyramid and cube for a small amount
         rotationCube += (10 * elapsed) / 1000.0;
     }
+    xPosition -= elapsed;
+    zPosition -= elapsed;
+
     lastTime = timeNow;
 }
 
@@ -693,18 +700,22 @@ function handleKeys() {
     if (currentlyPressedKeys[37]) {
         // Left cursor key
         positionCube[0] -= 0.1;
+        xPosition -= 0.1;
     }
     if (currentlyPressedKeys[39]) {
         // Right cursor key
         positionCube[0] += 0.1;
+        xPosition += 0.1;
     }
     if (currentlyPressedKeys[38]) {
         // Up cursor key
         positionCube[2] -= 0.1;
+        yPosition -= 0.1;
     }
     if (currentlyPressedKeys[40]) {
         // Down cursor key
         positionCube[2] += 0.1;
+        yPosition += 0.1;
     }
 }
 
@@ -752,4 +763,8 @@ function start() {
         }, 15);
 
     }
+}
+
+function cameraPosition(xPosition, yPosition, zPosition){
+    mat4.translate(mvMatrix, [-xPosition, -yPosition, -zPosition]);
 }

@@ -692,32 +692,41 @@ function moveObjects(elapsed) {
 
 function animate() {
     var timeNow = new Date().getTime();
-    var sideAcc = 100;
+    var sideAcc = 150;
+    var maxSpeed = 20;
     if (lastTime !== 0) {
         var elapsed = timeNow - lastTime;
-        //console.log(cubeLane);
+        // console.log(cubeLane);
         //console.log(cubeLane*laneWidth);
         //console.log(positionCube[0]);
-        var distance = positionCube[0]-laneWidth * cubeLane;
+        var distance = laneWidth * cubeLane - positionCube[0];
         //console.log(distance);
+        //console.log(Math.abs((moveSpeedCube[0]) * (moveSpeedCube[0] / sideAcc)));
         //console.log(moveSpeedCube[0]);
-        if(Math.abs(distance) < 0.1){
+
+
+        if(Math.abs(distance) < 0.05){
             moveSpeedCube[0]=0;
             //console.log("not moving");
         } else {
-            if (Math.abs(distance) <= Math.abs((moveSpeedCube[0] / 2) * (moveSpeedCube[0] / sideAcc))) {
-                //console.log("if doesn't look good");
-                if (distance > 0)
-                    moveSpeedCube[0] += sideAcc*elapsed/1000;
-                else
-                    moveSpeedCube[0] -= sideAcc*elapsed/1000;
-            } else {
+            if (Math.abs(distance) < Math.abs((moveSpeedCube[0]) * (moveSpeedCube[0] / sideAcc))) {
                 //console.log("if looks good");
                 if (distance < 0)
-                    moveSpeedCube[0] += sideAcc*elapsed/1000;
+                    moveSpeedCube[0] += sideAcc * elapsed / 1000;
                 else
-                    moveSpeedCube[0] -= sideAcc*elapsed/1000;
+                    moveSpeedCube[0] -= sideAcc * elapsed / 1000;
+            } else {
+                //console.log("if doesn't look good");
+                if (distance > 0 )
+                    moveSpeedCube[0] += sideAcc * elapsed / 1000;
+                else
+                    moveSpeedCube[0] -= sideAcc * elapsed / 1000;
             }
+            if(moveSpeedCube[0]> maxSpeed)
+                moveSpeedCube[0] = maxSpeed;
+            if(moveSpeedCube[0] < -maxSpeed)
+                moveSpeedCube[0] = -maxSpeed;
+
         }
 
 
@@ -755,7 +764,7 @@ function handleKeyPress(event) {
     // storing the pressed state for individual key
     currentlyPressedKeys[event.keyCode] = true;
     clickedKeys[event.keyCode] = true;
-    console.log("key pressed");
+    //console.log("key pressed");
 
 }
 
@@ -777,30 +786,10 @@ function handleKeys() {
         if (cubeLane < 1)
             cubeLane++;
         clickedKeys[39]=false;
-    } /*else if (currentlyPressedKeys[38]) {
-        // Up cursor key
-        moveSpeedCube[2] -= 0.5;
-    } else if (currentlyPressedKeys[40]) {
-        // Down cursor key
-        moveSpeedCube[2] += 0.5;
-    }*/ else {
-        if (moveSpeedCube[0] > 0.5) {
-            moveSpeedCube[0] -= 0.5;
-        } else if (moveSpeedCube[0] < -0.5) {
-            moveSpeedCube[0] += 0.5;
-        } else {
-            moveSpeedCube[0] = 0;
-        }
-        /*if(moveSpeedCube[2] > 0.5  + travelSpeed){
-            moveSpeedCube[2] -= 0.5;
-        } else if(moveSpeedCube[2] < -0.5 + travelSpeed){
-            moveSpeedCube[2] += 0.5;
-        } else {
-            moveSpeedCube[2] = travelSpeed;
-        }*/
     }
-    if (currentlyPressedKeys[32]) {
-        // Down cursor key
+    if (currentlyPressedKeys[38]) {
+        // Up cursor key
+        console.log("up pressed");
         jump = true;
     }
 }

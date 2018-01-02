@@ -155,13 +155,13 @@ function getShader(gl, id) {
 function initShaders() {
     var fragmentShader = getShader(gl, "per-fragment-lighting-fs");
     var vertexShader = getShader(gl, "per-fragment-lighting-vs");
-
+  
   // Create the shader program
   shaderProgram = gl.createProgram();
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
   gl.linkProgram(shaderProgram);
-
+  
   // If creating the shader program failed, alert
   if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
     alert("Unable to initialize the shader program.");
@@ -188,11 +188,11 @@ function initShaders() {
   // turn on texture coordinate attribute at specified position
   gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
-  // store location of uPMatrix variable defined in shader - projection matrix
+  // store location of uPMatrix variable defined in shader - projection matrix 
   shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-  // store location of uMVMatrix variable defined in shader - model-view matrix
+  // store location of uMVMatrix variable defined in shader - model-view matrix 
   shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-  // store location of uNMatrix variable defined in shader - normal matrix
+  // store location of uNMatrix variable defined in shader - normal matrix 
   shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
   // store location of uSampler variable defined in shader
   shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");

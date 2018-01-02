@@ -312,10 +312,10 @@ function initBuffers() {
     // Now create an array of vertex normals for the world.
     var vertexNormals = [
         // plane
-        0.0, -1.0,  0.0,
-        0.0, -1.0,  0.0,
-        0.0, -1.0,  0.0,
-        0.0, -1.0,  0.0
+        0.0, 1.0,  0.0,
+        0.0, 1.0,  0.0,
+        0.0, 1.0,  0.0,
+        0.0, 1.0,  0.0
     ];
 
     // Pass the normals into WebGL

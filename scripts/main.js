@@ -692,7 +692,7 @@ function moveObjects(elapsed) {
 
 function animate() {
     var timeNow = new Date().getTime();
-    var sideAcc = 50;
+    var sideAcc = 100;
     if (lastTime !== 0) {
         var elapsed = timeNow - lastTime;
         //console.log(cubeLane);

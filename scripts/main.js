@@ -46,9 +46,11 @@ var currentlyPressedKeys = {};
 var jump = false;
 var positionCube = [0.0, -1.0, -7.0];
 var rotationCube = [0.0, 0.0, 0.0];
-var moveSpeedCube = [0.0, 0.0, -1,0];
+var moveSpeedCube = [0.0, 0.0, -10,0];
 var rotationSpeedCube = [0.0, 0.0, 0.0];
 var onGround = true;
+var cubeLane = 1;
+var laneWidth = 4;
 
 
 
@@ -298,10 +300,10 @@ function initBuffers() {
     // Now create an array of vertices for the world.
     vertices = [
         // MAIN PLANE
-        -5.0, 0.0, -50.0,
-        5.0, 0.0, -50.0,
-        5.0, 0.0,  5.0,
-        -5.0, 0.0,  5.0
+        -6.0, 0.0, -500.0,
+        6.0, 0.0, -500.0,
+        6.0, 0.0,  0.0,
+        -6.0, 0.0,  0.0
     ];
 
     // Now pass the list of vertices into WebGL to build the shape. We
@@ -544,7 +546,7 @@ function drawScene() {
     // ratio and we only want to see objects between 0.1 units
     // and 100 units away from the camera.
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-    setCameraPosition(pMatrix, positionCube[0], positionCube[1]+3, positionCube[2]+10, 10, 0);
+    setCameraPosition(pMatrix, positionCube[0]/2, positionCube[1]/2+3, positionCube[2]+10, 10, 0);
 
     var lighting = true;
     gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);
@@ -678,6 +680,14 @@ function drawScene() {
 //
 // Called every time before redeawing the screen.
 //
+
+function moveObjects(elapsed){
+    positionCube[0] += moveSpeedCube[0]*elapsed/1000;
+    positionCube[1] += moveSpeedCube[1]*elapsed/1000;
+    positionCube[2] += moveSpeedCube[2]*elapsed/1000;
+}
+
+
 function animate() {
     var timeNow = new Date().getTime();
     if (lastTime !== 0) {
@@ -691,8 +701,9 @@ function animate() {
         }
         if(!onGround){
             moveSpeedCube[1] -= 30*elapsed/1000;
-            positionCube[1] += moveSpeedCube[1]*elapsed/1000;
         }
+
+        moveObjects(elapsed);
 
         if(positionCube[1]<=-1 && !onGround){
             positionCube[1]= -1;
@@ -700,8 +711,7 @@ function animate() {
             onGround = true;
             jump = false
         }
-        positionCube[0] += moveSpeedCube[0]*elapsed/1000;
-        positionCube[2] += moveSpeedCube[2]*elapsed/1000;
+
 
 
     }
@@ -727,19 +737,27 @@ function handleKeyUp(event) {
 function handleKeys() {
     if (currentlyPressedKeys[37]) {
         // Left cursor key
-        moveSpeedCube[0] -= 0.1;
-    }
-    if (currentlyPressedKeys[39]) {
+        moveSpeedCube[0] -= 0.5;
+    } else if (currentlyPressedKeys[39]) {
         // Right cursor key
-        moveSpeedCube[0] += 0.1;
-    }
-    if (currentlyPressedKeys[38]) {
+        moveSpeedCube[0] += 0.5;
+    } else if (currentlyPressedKeys[38]) {
         // Up cursor key
-        moveSpeedCube[2] -= 0.1;
-    }
-    if (currentlyPressedKeys[40]) {
+        moveSpeedCube[2] -= 0.5;
+    } else if (currentlyPressedKeys[40]) {
         // Down cursor key
-        moveSpeedCube[2] += 0.1;
+        moveSpeedCube[2] += 0.5;
+    } else {
+        if(Math.abs(moveSpeedCube[0]) < 0.5){
+            moveSpeedCube[0] = 0;
+        } else {
+            moveSpeedCube[0] = moveSpeedCube[0]*(1-(1/20));
+        }
+        if(Math.abs(moveSpeedCube[2]) < 0.5){
+            moveSpeedCube[2] = 0;
+        } else {
+            moveSpeedCube[2] = moveSpeedCube[02]*(1-(1/20));
+        }
     }
     if (currentlyPressedKeys[32]) {
         // Down cursor key

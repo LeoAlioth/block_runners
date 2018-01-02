@@ -25,7 +25,7 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 
 // Helper variables for storing current rotation of pyramid and cube
-var rotationCube = 0;
+
 
 // Helper variable for animation
 var lastTime = 0;
@@ -43,7 +43,9 @@ var texturesLoaded = 0;
 var currentlyPressedKeys = {};
 
 // Variables for storing current position of cube
+var jump = false;
 var positionCube = [0.0, -1.0, -7.0];
+var rotationCube = [0.0, 0.0, 0.0];
 
 
 //
@@ -628,7 +630,9 @@ function drawScene() {
 
     // Save the current matrix, then rotate before we draw.
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(rotationCube), [1, 1, 1]);
+    mat4.rotate(mvMatrix, degToRad(rotationCube[0]), [1, 0, 0]);
+    mat4.rotate(mvMatrix, degToRad(rotationCube[1]), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(rotationCube[2]), [0, 0, 1]);
 
     // Set the vertex positions attribute for the cube vertices.
     gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexPositionBuffer);
@@ -667,7 +671,10 @@ function animate() {
         var elapsed = timeNow - lastTime;
 
         // rotate pyramid and cube for a small amount
-        rotationCube += (10 * elapsed) / 1000.0;
+        if (jump) {
+            rotationCube[1] += (10 * elapsed) / 1000.0;
+            jump = false;
+        }
     }
     lastTime = timeNow;
 }
@@ -704,6 +711,10 @@ function handleKeys() {
     if (currentlyPressedKeys[40]) {
         // Down cursor key
         positionCube[2] += 0.1;
+    }
+    if (currentlyPressedKeys[32]) {
+        // Down cursor key
+        jump = true;
     }
 }
 

@@ -5,8 +5,8 @@ var gl;
 // shading programs
 var shaderProgram;
 
-class GameObject{
-    constructor(){
+class GameObject {
+    constructor() {
         this.VertexPositionBuffer;
         this.VertexNormalBuffer;
         this.VertexTextureCoordBuffer;
@@ -41,17 +41,19 @@ var texturesLoaded = 0;
 
 // Keyboard handling helper variable for reading the status of keys
 var currentlyPressedKeys = {};
+var clickedKeys = {};
 
 // Variables for storing current position of cube
 var jump = false;
 var positionCube = [0.0, -1.0, -7.0];
 var rotationCube = [0.0, 0.0, 0.0];
-var moveSpeedCube = [0.0, 0.0, -10,0];
+var travelSpeed = -10;
+var moveSpeedCube = [0.0, 0.0, -10, 0];
 var rotationSpeedCube = [0.0, 0.0, 0.0];
 var onGround = true;
-var cubeLane = 1;
+var cubeLane = 0;
 var laneWidth = 4;
-
+var left
 
 
 //
@@ -62,7 +64,7 @@ var laneWidth = 4;
 // degToRad ... convert degrees to radians
 //
 
-function setCameraPosition(pMatrix, posX, posY, posZ, pitch, yaw){
+function setCameraPosition(pMatrix, posX, posY, posZ, pitch, yaw) {
     mat4.rotate(pMatrix, degToRad(pitch), [1, 0, 0]);
     mat4.rotate(pMatrix, degToRad(yaw), [0, 1, 0]);
     mat4.translate(pMatrix, [-posX, -posY, -posZ]);
@@ -167,63 +169,63 @@ function getShader(gl, id) {
 function initShaders() {
     var fragmentShader = getShader(gl, "per-fragment-lighting-fs");
     var vertexShader = getShader(gl, "per-fragment-lighting-vs");
-  
-  // Create the shader program
-  shaderProgram = gl.createProgram();
-  gl.attachShader(shaderProgram, vertexShader);
-  gl.attachShader(shaderProgram, fragmentShader);
-  gl.linkProgram(shaderProgram);
-  
-  // If creating the shader program failed, alert
-  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    alert("Unable to initialize the shader program.");
-  }
 
-  // start using shading program for rendering
-  gl.useProgram(shaderProgram);
+    // Create the shader program
+    shaderProgram = gl.createProgram();
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
 
-  // store location of aVertexPosition variable defined in shader
-  shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+    // If creating the shader program failed, alert
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        alert("Unable to initialize the shader program.");
+    }
 
-  // turn on vertex position attribute at specified position
-  gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+    // start using shading program for rendering
+    gl.useProgram(shaderProgram);
 
-  // store location of vertex normals variable defined in shader
-  shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
+    // store location of aVertexPosition variable defined in shader
+    shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
 
-  // turn on vertex normals attribute at specified position
-  gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+    // turn on vertex position attribute at specified position
+    gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
-  // store location of texture coordinate variable defined in shader
-  shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+    // store location of vertex normals variable defined in shader
+    shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
 
-  // turn on texture coordinate attribute at specified position
-  gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+    // turn on vertex normals attribute at specified position
+    gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
-  // store location of uPMatrix variable defined in shader - projection matrix 
-  shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-  // store location of uMVMatrix variable defined in shader - model-view matrix 
-  shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-  // store location of uNMatrix variable defined in shader - normal matrix 
-  shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
-  // store location of uSampler variable defined in shader
-  shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-  // store location of uMaterialShininess variable defined in shader
-  shaderProgram.materialShininessUniform = gl.getUniformLocation(shaderProgram, "uMaterialShininess");
-  // store location of uShowSpecularHighlights variable defined in shader
-  shaderProgram.showSpecularHighlightsUniform = gl.getUniformLocation(shaderProgram, "uShowSpecularHighlights");
-  // store location of uUseTextures variable defined in shader
-  shaderProgram.useTexturesUniform = gl.getUniformLocation(shaderProgram, "uUseTextures");
-  // store location of uUseLighting variable defined in shader
-  shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
-  // store location of uAmbientColor variable defined in shader
-  shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-  // store location of uPointLightingLocation variable defined in shader
-  shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
-  // store location of uPointLightingSpecularColor variable defined in shader
-  shaderProgram.pointLightingSpecularColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingSpecularColor");
-  // store location of uPointLightingDiffuseColor variable defined in shader
-  shaderProgram.pointLightingDiffuseColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingDiffuseColor");
+    // store location of texture coordinate variable defined in shader
+    shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+
+    // turn on texture coordinate attribute at specified position
+    gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+
+    // store location of uPMatrix variable defined in shader - projection matrix
+    shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+    // store location of uMVMatrix variable defined in shader - model-view matrix
+    shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+    // store location of uNMatrix variable defined in shader - normal matrix
+    shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
+    // store location of uSampler variable defined in shader
+    shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+    // store location of uMaterialShininess variable defined in shader
+    shaderProgram.materialShininessUniform = gl.getUniformLocation(shaderProgram, "uMaterialShininess");
+    // store location of uShowSpecularHighlights variable defined in shader
+    shaderProgram.showSpecularHighlightsUniform = gl.getUniformLocation(shaderProgram, "uShowSpecularHighlights");
+    // store location of uUseTextures variable defined in shader
+    shaderProgram.useTexturesUniform = gl.getUniformLocation(shaderProgram, "uUseTextures");
+    // store location of uUseLighting variable defined in shader
+    shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
+    // store location of uAmbientColor variable defined in shader
+    shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+    // store location of uPointLightingLocation variable defined in shader
+    shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
+    // store location of uPointLightingSpecularColor variable defined in shader
+    shaderProgram.pointLightingSpecularColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingSpecularColor");
+    // store location of uPointLightingDiffuseColor variable defined in shader
+    shaderProgram.pointLightingDiffuseColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingDiffuseColor");
 }
 
 //
@@ -250,7 +252,7 @@ function initTextures() {
     };
     worldTexture.image.src = "./assets/wall.png";
 
-    console.log("initializing world");
+    //console.log("initializing world");
 
     cubeTexture = gl.createTexture();
     cubeTexture.image = new Image();
@@ -259,7 +261,7 @@ function initTextures() {
     };
     cubeTexture.image.src = "./assets/crate.gif";
 
-    console.log("initializing cube");
+    //console.log("initializing cube");
 }
 
 function handleTextureLoaded(texture) {
@@ -274,7 +276,7 @@ function handleTextureLoaded(texture) {
 
     gl.bindTexture(gl.TEXTURE_2D, null);
 
-    console.log(texture);
+    //console.log(texture);
 
     // when texture loading is finished we can draw scene.
     texturesLoaded += 1;
@@ -302,8 +304,8 @@ function initBuffers() {
         // MAIN PLANE
         -6.0, 0.0, -500.0,
         6.0, 0.0, -500.0,
-        6.0, 0.0,  0.0,
-        -6.0, 0.0,  0.0
+        6.0, 0.0, 0.0,
+        -6.0, 0.0, 0.0
     ];
 
     // Now pass the list of vertices into WebGL to build the shape. We
@@ -320,10 +322,10 @@ function initBuffers() {
     // Now create an array of vertex normals for the world.
     var vertexNormals = [
         // plane
-        0.0, 1.0,  0.0,
-        0.0, 1.0,  0.0,
-        0.0, 1.0,  0.0,
-        0.0, 1.0,  0.0
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0
     ];
 
     // Pass the normals into WebGL
@@ -355,7 +357,7 @@ function initBuffers() {
     world.VertexIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, world.VertexIndexBuffer);
     var worldVertexIndices = [
-        2, 1, 0,      3, 2, 0    // MAIN PLANE
+        2, 1, 0, 3, 2, 0    // MAIN PLANE
     ];
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(worldVertexIndices), gl.STATIC_DRAW);
     world.VertexIndexBuffer.itemSize = 1;
@@ -372,40 +374,40 @@ function initBuffers() {
     // Now create an array of vertices for the cube.
     vertices = [
         // Front face
-        -1.0, -1.0,  1.0,
-        1.0, -1.0,  1.0,
-        1.0,  1.0,  1.0,
-        -1.0,  1.0,  1.0,
+        -1.0, -1.0, 1.0,
+        1.0, -1.0, 1.0,
+        1.0, 1.0, 1.0,
+        -1.0, 1.0, 1.0,
 
         // Back face
         -1.0, -1.0, -1.0,
-        -1.0,  1.0, -1.0,
-        1.0,  1.0, -1.0,
+        -1.0, 1.0, -1.0,
+        1.0, 1.0, -1.0,
         1.0, -1.0, -1.0,
 
         // Top face
-        -1.0,  1.0, -1.0,
-        -1.0,  1.0,  1.0,
-        1.0,  1.0,  1.0,
-        1.0,  1.0, -1.0,
+        -1.0, 1.0, -1.0,
+        -1.0, 1.0, 1.0,
+        1.0, 1.0, 1.0,
+        1.0, 1.0, -1.0,
 
         // Bottom face
         -1.0, -1.0, -1.0,
         1.0, -1.0, -1.0,
-        1.0, -1.0,  1.0,
-        -1.0, -1.0,  1.0,
+        1.0, -1.0, 1.0,
+        -1.0, -1.0, 1.0,
 
         // Right face
         1.0, -1.0, -1.0,
-        1.0,  1.0, -1.0,
-        1.0,  1.0,  1.0,
-        1.0, -1.0,  1.0,
+        1.0, 1.0, -1.0,
+        1.0, 1.0, 1.0,
+        1.0, -1.0, 1.0,
 
         // Left face
         -1.0, -1.0, -1.0,
-        -1.0, -1.0,  1.0,
-        -1.0,  1.0,  1.0,
-        -1.0,  1.0, -1.0
+        -1.0, -1.0, 1.0,
+        -1.0, 1.0, 1.0,
+        -1.0, 1.0, -1.0
     ];
 
     // Now pass the list of vertices into WebGL to build the shape. We
@@ -422,40 +424,40 @@ function initBuffers() {
     // Now create an array of vertex normals for the cube.
     var vertexNormals = [
         // Front face
-        0.0,  0.0,  1.0,
-        0.0,  0.0,  1.0,
-        0.0,  0.0,  1.0,
-        0.0,  0.0,  1.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
+        0.0, 0.0, 1.0,
 
         // Back face
-        0.0,  0.0, -1.0,
-        0.0,  0.0, -1.0,
-        0.0,  0.0, -1.0,
-        0.0,  0.0, -1.0,
+        0.0, 0.0, -1.0,
+        0.0, 0.0, -1.0,
+        0.0, 0.0, -1.0,
+        0.0, 0.0, -1.0,
 
         // Top face
-        0.0,  1.0,  0.0,
-        0.0,  1.0,  0.0,
-        0.0,  1.0,  0.0,
-        0.0,  1.0,  0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 1.0, 0.0,
 
         // Bottom face
-        0.0, -1.0,  0.0,
-        0.0, -1.0,  0.0,
-        0.0, -1.0,  0.0,
-        0.0, -1.0,  0.0,
+        0.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
 
         // Right face
-        1.0,  0.0,  0.0,
-        1.0,  0.0,  0.0,
-        1.0,  0.0,  0.0,
-        1.0,  0.0,  0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
 
         // Left face
-        -1.0,  0.0,  0.0,
-        -1.0,  0.0,  0.0,
-        -1.0,  0.0,  0.0,
-        -1.0,  0.0,  0.0
+        -1.0, 0.0, 0.0,
+        -1.0, 0.0, 0.0,
+        -1.0, 0.0, 0.0,
+        -1.0, 0.0, 0.0
     ];
 
     // Pass the normals into WebGL
@@ -517,12 +519,12 @@ function initBuffers() {
     cube.VertexIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.VertexIndexBuffer);
     var cubeVertexIndices = [
-        0, 1, 2,      0, 2, 3,    // Front face
-        4, 5, 6,      4, 6, 7,    // Back face
-        8, 9, 10,     8, 10, 11,  // Top face
-        12, 13, 14,   12, 14, 15, // Bottom face
-        16, 17, 18,   16, 18, 19, // Right face
-        20, 21, 22,   20, 22, 23  // Left face
+        0, 1, 2, 0, 2, 3,    // Front face
+        4, 5, 6, 4, 6, 7,    // Back face
+        8, 9, 10, 8, 10, 11,  // Top face
+        12, 13, 14, 12, 14, 15, // Bottom face
+        16, 17, 18, 16, 18, 19, // Right face
+        20, 21, 22, 20, 22, 23  // Left face
     ];
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
     cube.VertexIndexBuffer.itemSize = 1;
@@ -546,7 +548,7 @@ function drawScene() {
     // ratio and we only want to see objects between 0.1 units
     // and 100 units away from the camera.
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-    setCameraPosition(pMatrix, positionCube[0]/2, positionCube[1]/2+3, positionCube[2]+10, 10, 0);
+    setCameraPosition(pMatrix, positionCube[0] / 2, positionCube[1] / 2 + 3, positionCube[2] + 10, 10, 0);
 
     var lighting = true;
     gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);
@@ -558,7 +560,7 @@ function drawScene() {
     // the center of the scene.
     mat4.identity(mvMatrix);
 
-   // set uniforms for lights as defined in the document
+    // set uniforms for lights as defined in the document
     if (lighting) {
         gl.uniform3f(
             shaderProgram.ambientColorUniform,
@@ -681,37 +683,62 @@ function drawScene() {
 // Called every time before redeawing the screen.
 //
 
-function moveObjects(elapsed){
-    positionCube[0] += moveSpeedCube[0]*elapsed/1000;
-    positionCube[1] += moveSpeedCube[1]*elapsed/1000;
-    positionCube[2] += moveSpeedCube[2]*elapsed/1000;
+function moveObjects(elapsed) {
+    positionCube[0] += moveSpeedCube[0] * elapsed / 1000;
+    positionCube[1] += moveSpeedCube[1] * elapsed / 1000;
+    positionCube[2] += moveSpeedCube[2] * elapsed / 1000;
 }
 
 
 function animate() {
     var timeNow = new Date().getTime();
+    var sideAcc = 50;
     if (lastTime !== 0) {
         var elapsed = timeNow - lastTime;
+        //console.log(cubeLane);
+        //console.log(cubeLane*laneWidth);
+        //console.log(positionCube[0]);
+        var distance = positionCube[0]-laneWidth * cubeLane;
+        //console.log(distance);
+        //console.log(moveSpeedCube[0]);
+        if(Math.abs(distance) < 0.1){
+            moveSpeedCube[0]=0;
+            //console.log("not moving");
+        } else {
+            if (Math.abs(distance) <= Math.abs((moveSpeedCube[0] / 2) * (moveSpeedCube[0] / sideAcc))) {
+                //console.log("if doesn't look good");
+                if (distance > 0)
+                    moveSpeedCube[0] += sideAcc*elapsed/1000;
+                else
+                    moveSpeedCube[0] -= sideAcc*elapsed/1000;
+            } else {
+                //console.log("if looks good");
+                if (distance < 0)
+                    moveSpeedCube[0] += sideAcc*elapsed/1000;
+                else
+                    moveSpeedCube[0] -= sideAcc*elapsed/1000;
+            }
+        }
+
 
         // rotate pyramid and cube for a small amount
         if (jump && onGround) {
-            moveSpeedCube[1] = 10;
+            moveSpeedCube[1] = 15;
             onGround = false;
             jump = false;
         }
-        if(!onGround){
-            moveSpeedCube[1] -= 30*elapsed/1000;
+        if (!onGround) {
+            moveSpeedCube[1] -= 50 * elapsed / 1000;
         }
 
         moveObjects(elapsed);
 
-        if(positionCube[1]<=-1 && !onGround){
-            positionCube[1]= -1;
+        if (positionCube[1] <= -1 && !onGround) {
+            positionCube[1] = -1;
             moveSpeedCube[1] = 0;
             onGround = true;
             jump = false
         }
-
 
 
     }
@@ -724,47 +751,59 @@ function animate() {
 // handleKeyDown    ... called on keyDown event
 // handleKeyUp      ... called on keyUp event
 //
-function handleKeyDown(event) {
+function handleKeyPress(event) {
     // storing the pressed state for individual key
     currentlyPressedKeys[event.keyCode] = true;
+    clickedKeys[event.keyCode] = true;
+    console.log("key pressed");
+
 }
 
 function handleKeyUp(event) {
     // reseting the pressed state for individual key
     currentlyPressedKeys[event.keyCode] = false;
+
 }
 
 function handleKeys() {
-    if (currentlyPressedKeys[37]) {
+
+    if (clickedKeys[37]) {
         // Left cursor key
-        moveSpeedCube[0] -= 0.5;
-    } else if (currentlyPressedKeys[39]) {
+        if (cubeLane > -1)
+            cubeLane--;
+        clickedKeys[37]=false;
+    } else if (clickedKeys[39]) {
         // Right cursor key
-        moveSpeedCube[0] += 0.5;
-    } else if (currentlyPressedKeys[38]) {
+        if (cubeLane < 1)
+            cubeLane++;
+        clickedKeys[39]=false;
+    } /*else if (currentlyPressedKeys[38]) {
         // Up cursor key
         moveSpeedCube[2] -= 0.5;
     } else if (currentlyPressedKeys[40]) {
         // Down cursor key
         moveSpeedCube[2] += 0.5;
-    } else {
-        if(Math.abs(moveSpeedCube[0]) < 0.5){
+    }*/ else {
+        if (moveSpeedCube[0] > 0.5) {
+            moveSpeedCube[0] -= 0.5;
+        } else if (moveSpeedCube[0] < -0.5) {
+            moveSpeedCube[0] += 0.5;
+        } else {
             moveSpeedCube[0] = 0;
-        } else {
-            moveSpeedCube[0] = moveSpeedCube[0]*(1-(1/20));
         }
-        if(Math.abs(moveSpeedCube[2]) < 0.5){
-            moveSpeedCube[2] = 0;
+        /*if(moveSpeedCube[2] > 0.5  + travelSpeed){
+            moveSpeedCube[2] -= 0.5;
+        } else if(moveSpeedCube[2] < -0.5 + travelSpeed){
+            moveSpeedCube[2] += 0.5;
         } else {
-            moveSpeedCube[2] = moveSpeedCube[02]*(1-(1/20));
-        }
+            moveSpeedCube[2] = travelSpeed;
+        }*/
     }
     if (currentlyPressedKeys[32]) {
         // Down cursor key
         jump = true;
     }
 }
-
 
 
 //
@@ -796,11 +835,11 @@ function start() {
         initTextures();
 
         // Bind keyboard handling functions to document handlers
-        document.onkeydown = handleKeyDown;
+        document.onkeypress = handleKeyPress;
         document.onkeyup = handleKeyUp;
 
         // Set up to draw the scene periodically every 15ms.
-        setInterval(function() {
+        setInterval(function () {
             if (texturesLoaded === numberOfTextures) {
                 requestAnimationFrame(animate);
                 handleKeys();

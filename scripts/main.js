@@ -60,6 +60,12 @@ var onGround = true;
 // degToRad ... convert degrees to radians
 //
 
+function setCameraPosition(pMatrix, posX, posY, posZ, pitch, yaw){
+    mat4.rotate(pMatrix, degToRad(pitch), [1, 0, 0]);
+    mat4.rotate(pMatrix, degToRad(yaw), [0, 1, 0]);
+    mat4.translate(pMatrix, [-posX, -posY, -posZ]);
+}
+
 function mvPushMatrix() {
     var copy = mat4.create();
     mat4.set(mvMatrix, copy);
@@ -538,6 +544,8 @@ function drawScene() {
     // ratio and we only want to see objects between 0.1 units
     // and 100 units away from the camera.
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    setCameraPosition(pMatrix, positionCube[0], positionCube[1]+3, positionCube[2]+10, 10, 0);
+
     var lighting = true;
     gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);
     gl.uniform1i(shaderProgram.useLightingUniform, lighting);
@@ -627,6 +635,7 @@ function drawScene() {
     // Set the drawing position to the "identity" point, which is
     // the center of the scene.
     mat4.identity(mvMatrix);
+    //setCameraPosition(0, 0, 2, 0, 0);
 
     // Now move the drawing position a bit to where we want to start
     // drawing the cube.

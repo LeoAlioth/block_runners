@@ -7,8 +7,8 @@
     <script src="./scripts/main.js" type="text/javascript"></script>
 
     <!-- Fragment shader program -->
-    <script id="shader-fs" type="x-shader/x-fragment">
-		    precision mediump float;
+    <script id="per-fragment-lighting-fs" type="x-shader/x-fragment">
+		     precision mediump float;
 
 	    	// uniform attribute for setting texture coordinates
 		    varying vec2 vTextureCoord;
@@ -75,7 +75,7 @@
 		</script>
 
     <!-- Vertex shader program -->
-    <script id="shader-vs" type="x-shader/x-vertex">
+    <script id="per-fragment-lighting-vs" type="x-shader/x-vertex">
     		// atributes for setting vertex position, normals and texture coordinates
 		    attribute vec3 aVertexPosition;
 		    attribute vec3 aVertexNormal;
@@ -120,16 +120,22 @@
     <br/>
     <table>
         <tr>
-            <td class="table1st"><b>Point light:</b></td>
-            <td>X: <input type="range" min="-10" max="10" step="0.05" id="lightPositionX" value="0" oninput="showValue(this.id, this.value)" /><span id="lightPositionXspan">0.0</span></td>
-            <td>Y: <input type="range" min="-10" max="10" step="0.05" id="lightPositionY" value="0" oninput="showValue(this.id, this.value)" /><span id="lightPositionYspan">0.0</span></td>
-            <td>Z: <input type="range" min="-20" max="20" step="1" id="lightPositionZ" value="-20" oninput="showValue(this.id, this.value)" /><span id="lightPositionZspan">-20.0</span></td>
+            <td class="table1st"><b>Location:</b></td>
+            <td>X: <input type="range" min="-10" max="10" step="0.05" id="lightPositionX" value="-10.0" oninput="showValue(this.id, this.value)" /><span id="lightPositionXspan">-10.0</span></td>
+            <td>Y: <input type="range" min="-10" max="10" step="0.05" id="lightPositionY" value="4.0" oninput="showValue(this.id, this.value)" /><span id="lightPositionYspan">4.0</span></td>
+            <td>Z: <input type="range" min="-20" max="20" step="1" id="lightPositionZ" value="-20.0" oninput="showValue(this.id, this.value)" /><span id="lightPositionZspan">-20.0</span></td>
         </tr>
         <tr>
-            <td><b>Color:</b></td>
-            <td>R: <input type="range" min="0" max="1" step="0.01" id="pointR" value="0.8" oninput="showValue(this.id, this.value)" /><span id="pointRspan">0.8</span></td>
-            <td>G: <input type="range" min="0" max="1" step="0.01" id="pointG" value="0.8" oninput="showValue(this.id, this.value)" /><span id="pointGspan">0.8</span></td>
-            <td>B: <input type="range" min="0" max="1" step="0.01" id="pointB" value="0.8" oninput="showValue(this.id, this.value)" /><span id="pointBspan">0.8</span></td>
+            <td class="table1st"><b>Specular color:</b></td>
+            <td>R: <input type="range" min="0" max="1" step="0.01" id="specularR" value="0.8" oninput="showValue(this.id, this.value)" /><span id="specularRspan">0.8</span></td>
+            <td>G: <input type="range" min="0" max="1" step="0.01" id="specularG" value="0.8" oninput="showValue(this.id, this.value)" /><span id="specularGspan">0.8</span></td>
+            <td>B: <input type="range" min="0" max="1" step="0.01" id="specularB" value="0.8" oninput="showValue(this.id, this.value)" /><span id="specularBspan">0.8</span></td>
+        </tr>
+        <tr>
+            <td><b>Difuse color:</b></td>
+            <td>R: <input type="range" min="0" max="1" step="0.01" id="diffuseR" value="0.8" oninput="showValue(this.id, this.value)" /><span id="diffuseRspan">0.8</span></td>
+            <td>G: <input type="range" min="0" max="1" step="0.01" id="diffuseG" value="0.8" oninput="showValue(this.id, this.value)" /><span id="diffuseGspan">0.8</span></td>
+            <td>B: <input type="range" min="0" max="1" step="0.01" id="diffuseB" value="0.8" oninput="showValue(this.id, this.value)" /><span id="diffuseBspan">0.8</span></td>
         </tr>
     </table>
 

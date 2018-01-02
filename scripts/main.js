@@ -1,7 +1,12 @@
 // Global variable definition
 var canvas;
 var gl;
-var shaderProgram;
+
+// shading programs
+var currentProgram;
+var perVertexProgram;
+var perFragmentProgram;
+
 
 // Buffers
 var cubeVertexPositionBuffer;
@@ -146,9 +151,9 @@ function getShader(gl, id) {
 //
 // Initialize the shaders, so WebGL knows how to light our scene.
 //
-function initShaders() {
-    var fragmentShader = getShader(gl, "shader-fs");
-    var vertexShader = getShader(gl, "shader-vs");
+function initShaders(){
+    var fragmentShader = getShader(gl, "per-fragment-lighting-fs");
+    var vertexShader = getShader(gl, "per-fragment-lighting-vs");
 
     // Create the shader program
     shaderProgram = gl.createProgram();
@@ -170,17 +175,17 @@ function initShaders() {
     // turn on vertex position attribute at specified position
     gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
-    // store location of texture coordinate variable defined in shader
-    shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
-
-    // turn on texture coordinate attribute at specified position
-    gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
-
     // store location of vertex normals variable defined in shader
     shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
 
     // turn on vertex normals attribute at specified position
     gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+
+    // store location of texture coordinate variable defined in shader
+    shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+
+    // turn on texture coordinate attribute at specified position
+    gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
     // store location of uPMatrix variable defined in shader - projection matrix
     shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
@@ -190,14 +195,22 @@ function initShaders() {
     shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
     // store location of uSampler variable defined in shader
     shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+    // store location of uMaterialShininess variable defined in shader
+    shaderProgram.materialShininessUniform = gl.getUniformLocation(shaderProgram, "uMaterialShininess");
+    // store location of uShowSpecularHighlights variable defined in shader
+    shaderProgram.showSpecularHighlightsUniform = gl.getUniformLocation(shaderProgram, "uShowSpecularHighlights");
+    // store location of uUseTextures variable defined in shader
+    shaderProgram.useTexturesUniform = gl.getUniformLocation(shaderProgram, "uUseTextures");
     // store location of uUseLighting variable defined in shader
     shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
     // store location of uAmbientColor variable defined in shader
     shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
-    // store location of uLightingDirection variable defined in shader
+    // store location of uPointLightingLocation variable defined in shader
     shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
-    // store location of uDirectionalColor variable defined in shader
-    shaderProgram.pointLightingColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingColor");
+    // store location of uPointLightingSpecularColor variable defined in shader
+    shaderProgram.pointLightingSpecularColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingSpecularColor");
+    // store location of uPointLightingDiffuseColor variable defined in shader
+    shaderProgram.pointLightingDiffuseColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingDiffuseColor");
 }
 
 //
@@ -208,6 +221,50 @@ function initShaders() {
 function setMatrixUniforms() {
     gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
     gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+
+    var normalMatrix = mat3.create();
+    mat4.toInverseMat3(mvMatrix, normalMatrix);
+    mat3.transpose(normalMatrix);
+    gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
+}
+
+function initTextures() {
+
+    worldTexture = gl.createTexture();
+    worldTexture.image = new Image();
+    worldTexture.image.onload = function () {
+        handleTextureLoaded(worldTexture)
+    };
+    worldTexture.image.src = "./assets/wall.png";
+
+    console.log("initializing world");
+
+    cubeTexture = gl.createTexture();
+    cubeTexture.image = new Image();
+    cubeTexture.image.onload = function () {
+        handleTextureLoaded(cubeTexture);
+    };
+    cubeTexture.image.src = "./assets/crate.gif";
+
+    console.log("initializing cube");
+}
+
+function handleTextureLoaded(texture) {
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+    // Third texture uses Linear interpolation approximation with nearest Mipmap selection
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.generateMipmap(gl.TEXTURE_2D);
+
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    console.log(texture);
+
+    // when texture loading is finished we can draw scene.
+    texturesLoaded += 1;
 }
 
 //
@@ -476,38 +533,48 @@ function drawScene() {
     // ratio and we only want to see objects between 0.1 units
     // and 100 units away from the camera.
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    var lighting = true;
+    gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);
+    gl.uniform1i(shaderProgram.useLightingUniform, lighting);
+    gl.uniform1i(shaderProgram.useTexturesUniform, true);
 
     // Set the drawing position to the "identity" point, which is
     // the center of the scene.
     mat4.identity(mvMatrix);
 
    // set uniforms for lights as defined in the document
-    gl.uniform3f(
-        shaderProgram.ambientColorUniform,
-        parseFloat(document.getElementById("ambientR").value),
-        parseFloat(document.getElementById("ambientG").value),
-        parseFloat(document.getElementById("ambientB").value)
-    );
+    if (lighting) {
+        gl.uniform3f(
+            shaderProgram.ambientColorUniform,
+            parseFloat(document.getElementById("ambientR").value),
+            parseFloat(document.getElementById("ambientG").value),
+            parseFloat(document.getElementById("ambientB").value)
+        );
 
-    gl.uniform3f(
-        shaderProgram.pointLightingLocationUniform,
-        parseFloat(document.getElementById("lightPositionX").value),
-        parseFloat(document.getElementById("lightPositionY").value),
-        parseFloat(document.getElementById("lightPositionZ").value)
-    );
+        gl.uniform3f(
+            shaderProgram.pointLightingLocationUniform,
+            parseFloat(document.getElementById("lightPositionX").value),
+            parseFloat(document.getElementById("lightPositionY").value),
+            parseFloat(document.getElementById("lightPositionZ").value)
+        );
 
-    gl.uniform3f(
-        shaderProgram.pointLightingColorUniform,
-        parseFloat(document.getElementById("pointR").value),
-        parseFloat(document.getElementById("pointG").value),
-        parseFloat(document.getElementById("pointB").value)
-    );
+        gl.uniform3f(
+            shaderProgram.pointLightingSpecularColorUniform,
+            parseFloat(document.getElementById("specularR").value),
+            parseFloat(document.getElementById("specularG").value),
+            parseFloat(document.getElementById("specularB").value)
+        );
 
+        gl.uniform3f(
+            shaderProgram.pointLightingDiffuseColorUniform,
+            parseFloat(document.getElementById("diffuseR").value),
+            parseFloat(document.getElementById("diffuseG").value),
+            parseFloat(document.getElementById("diffuseB").value)
+        );
+    }
 
-    // Activate textures
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, worldTexture);
-    gl.uniform1i(shaderProgram.samplerUniform, 0);
+    // set uniform to the value of the checkbox.
+    gl.uniform1i(shaderProgram.useTexturesUniform, true);
 
     // world:
 
@@ -600,7 +667,7 @@ function animate() {
         var elapsed = timeNow - lastTime;
 
         // rotate pyramid and cube for a small amount
-        rotationCube += (75 * elapsed) / 1000.0;
+        rotationCube += (10 * elapsed) / 1000.0;
     }
     lastTime = timeNow;
 }
@@ -640,44 +707,6 @@ function handleKeys() {
     }
 }
 
-function initTextures() {
-
-    worldTexture = gl.createTexture();
-    worldTexture.image = new Image();
-    worldTexture.image.onload = function () {
-        handleTextureLoaded(worldTexture)
-    };
-    worldTexture.image.src = "./assets/wall.png";
-
-    console.log("initializing world");
-
-    cubeTexture = gl.createTexture();
-    cubeTexture.image = new Image();
-    cubeTexture.image.onload = function () {
-        handleTextureLoaded(cubeTexture);
-    };
-    cubeTexture.image.src = "./assets/crate.gif";
-
-    console.log("initializing cube");
-}
-
-function handleTextureLoaded(texture) {
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
-    // Third texture uses Linear interpolation approximation with nearest Mipmap selection
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.generateMipmap(gl.TEXTURE_2D);
-
-    gl.bindTexture(gl.TEXTURE_2D, null);
-
-    console.log(texture);
-
-    // when texture loading is finished we can draw scene.
-    texturesLoaded += 1;
-}
 
 
 //

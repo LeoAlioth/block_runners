@@ -25,7 +25,7 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 
 // Helper variables for storing current rotation of pyramid and cube
-
+var rotationCube = 0;
 
 // Helper variable for animation
 var lastTime = 0;
@@ -43,10 +43,11 @@ var texturesLoaded = 0;
 var currentlyPressedKeys = {};
 
 // Variables for storing current position of cube
-var jump = false;
 var positionCube = [0.0, -1.0, -7.0];
-var rotationCube = [0.0, 0.0, 0.0];
 
+var xPosition = 0;
+var yPosition = 0.4;
+var zPosition = 0;
 
 //
 // Matrix utility functions
@@ -544,6 +545,8 @@ function drawScene() {
     // the center of the scene.
     mat4.identity(mvMatrix);
 
+    cameraPosition(xPosition, yPosition, zPosition);
+
    // set uniforms for lights as defined in the document
     if (lighting) {
         gl.uniform3f(
@@ -630,9 +633,7 @@ function drawScene() {
 
     // Save the current matrix, then rotate before we draw.
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(rotationCube[0]), [1, 0, 0]);
-    mat4.rotate(mvMatrix, degToRad(rotationCube[1]), [0, 1, 0]);
-    mat4.rotate(mvMatrix, degToRad(rotationCube[2]), [0, 0, 1]);
+    mat4.rotate(mvMatrix, degToRad(rotationCube), [1, 1, 1]);
 
     // Set the vertex positions attribute for the cube vertices.
     gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexPositionBuffer);
@@ -671,11 +672,11 @@ function animate() {
         var elapsed = timeNow - lastTime;
 
         // rotate pyramid and cube for a small amount
-        if (jump) {
-            rotationCube[1] += (10 * elapsed) / 1000.0;
-            jump = false;
-        }
+        rotationCube += (10 * elapsed) / 1000.0;
     }
+    xPosition -= elapsed;
+    zPosition -= elapsed;
+
     lastTime = timeNow;
 }
 
@@ -699,22 +700,22 @@ function handleKeys() {
     if (currentlyPressedKeys[37]) {
         // Left cursor key
         positionCube[0] -= 0.1;
+        xPosition -= 0.1;
     }
     if (currentlyPressedKeys[39]) {
         // Right cursor key
         positionCube[0] += 0.1;
+        xPosition += 0.1;
     }
     if (currentlyPressedKeys[38]) {
         // Up cursor key
         positionCube[2] -= 0.1;
+        yPosition -= 0.1;
     }
     if (currentlyPressedKeys[40]) {
         // Down cursor key
         positionCube[2] += 0.1;
-    }
-    if (currentlyPressedKeys[32]) {
-        // Down cursor key
-        jump = true;
+        yPosition += 0.1;
     }
 }
 
@@ -762,4 +763,8 @@ function start() {
         }, 15);
 
     }
+}
+
+function cameraPosition(xPosition, yPosition, zPosition){
+    mat4.translate(mvMatrix, [-xPosition, -yPosition, -zPosition]);
 }

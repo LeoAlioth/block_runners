@@ -6,8 +6,9 @@ var gl;
 var shaderProgram;
 
 class GameObject {
+
     constructor() {
-        this.VertexPositionBuffer = null;
+        this.VertexpartPositionBuffer = null;
         this.VertexNormalBuffer = null;
         this.VertexTextureCoordBuffer = null;
         this.VertexIndexBuffer = null;
@@ -18,28 +19,56 @@ class GameObject {
         this.Speed = [0, 0, 0];
         this.RotationSpeed = [0, 0, 0];
     }
+
+    clone() {
+        var tmp = new GameObject();
+        tmp.VertexPositionBuffer = this.VertexPositionBuffer;
+        tmp.VertexNormalBuffer = this.VertexNormalBuffer;
+        tmp.VertexTextureCoordBuffer = this.VertexTextureCoordBuffer;
+        tmp.VertexIndexBuffer = this.VertexIndexBuffer;
+        tmp.Texture = this.Texture;
+        tmp.Position = this.Position;
+        tmp.RelativePosition = this.RelativePosition;
+        tmp.Rotation = this.Rotation;
+        tmp.Speed = this.Speed;
+        tmp.RotationSpeed = this.RotationSpeed;
+        return tmp;
+    }
 }
 
 class LevelPiece {
     constructor() {
-        this.Position = [0, 0, 0];
+        this.partPosition = [0, 0, 0];
         this.Ground = new GameObject();
-        this.gameObject = new Array(3);
-        for (var i = 0; i < 3; i++) {
-            this.gameObject[i] = new Array(3);
-            for (var j = 0; j < 3; j++) {
-                this.gameObject[i][j] = new Array(3);
-            }
-        }
+        this.gameObject = [];
     }
 
     moveComponents() {
-        this.Ground.Position = this.Position;
+        this.Ground.Position = [0, 0, 0];
+        this.Ground.Position[0] = this.partPosition[0] + this.Ground.RelativePosition[0];
+        this.Ground.Position[1] = this.partPosition[1] + this.Ground.RelativePosition[1];
+        this.Ground.Position[2] = this.partPosition[2] + this.Ground.RelativePosition[2];
+        for (var i = 0; i < this.gameObject.length; i++) {
+            this.gameObject[i].Position = [0, 0, 0];
+            this.gameObject[i].Position[0] = this.partPosition[0] + this.gameObject[i].RelativePosition[0];
+            this.gameObject[i].Position[1] = this.partPosition[1] + this.gameObject[i].RelativePosition[1];
+            this.gameObject[i].Position[2] = this.partPosition[2] + this.gameObject[i].RelativePosition[2];
+        }
+    }
+
+    clone() {
+        var tmp = new LevelPiece();
+        tmp.partPosition = this.partPosition;
+        tmp.Ground = this.Ground.clone();
+        for (var i = 0; i < this.gameObject.length; i++) {
+            tmp.gameObject.push(this.gameObject[i].clone());
+        }
     }
 }
 
 var Cube = new GameObject();
 var GroundPlane = new GameObject();
+var Obstacle = new GameObject();
 var LevelPart = new Array(20);
 var StartTime;
 
@@ -165,6 +194,127 @@ var CubeVertexIndices = [
     20, 21, 22, 20, 22, 23  // Left face
 ];
 
+var ObstacleVertices = [
+    // Front face
+    -1.0, -1.0, 1.0,
+    1.0, -1.0, 1.0,
+    1.0, 1.0, 1.0,
+    -1.0, 1.0, 1.0,
+
+    // Back face
+    -1.0, -1.0, -1.0,
+    -1.0, 1.0, -1.0,
+    1.0, 1.0, -1.0,
+    1.0, -1.0, -1.0,
+
+    // Top face
+    -1.0, 1.0, -1.0,
+    -1.0, 1.0, 1.0,
+    1.0, 1.0, 1.0,
+    1.0, 1.0, -1.0,
+
+    // Bottom face
+    -1.0, -1.0, -1.0,
+    1.0, -1.0, -1.0,
+    1.0, -1.0, 1.0,
+    -1.0, -1.0, 1.0,
+
+    // Right face
+    1.0, -1.0, -1.0,
+    1.0, 1.0, -1.0,
+    1.0, 1.0, 1.0,
+    1.0, -1.0, 1.0,
+
+    // Left face
+    -1.0, -1.0, -1.0,
+    -1.0, -1.0, 1.0,
+    -1.0, 1.0, 1.0,
+    -1.0, 1.0, -1.0
+];
+var ObstacleVertexNormals = [
+    // Front face
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+
+    // Back face
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+
+    // Top face
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+
+    // Bottom face
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+
+    // Right face
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+
+    // Left face
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0
+];
+var ObstacleTextureCoords = [
+    // Front face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+
+    // Back face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Top face
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+
+    // Bottom face
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+
+    // Right face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Left face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0
+];
+var ObstacleVertexIndices = [
+    0, 1, 2, 0, 2, 3,    // Front face
+    4, 5, 6, 4, 6, 7,    // Back face
+    8, 9, 10, 8, 10, 11,  // Top face
+    12, 13, 14, 12, 14, 15, // Bottom face
+    16, 17, 18, 16, 18, 19, // Right face
+    20, 21, 22, 20, 22, 23  // Left face
+];
+
+
 var GroundPlaneVertices = [
     // MAIN PLANE
     -6.0, 0.0, -6.0,
@@ -202,7 +352,7 @@ var lastTime = 0;
 
 
 // Variable that stores  loading state of textures.
-var numberOfTextures = 2;
+var numberOfTextures = 3;
 var texturesLoaded = 0;
 
 // Keyboard handling helper variable for reading the status of keys
@@ -210,7 +360,9 @@ var currentlyPressedKeys = {};
 var clickedKeys = {};
 
 // Variables for storing game mechanics data
-var travelSpeed = 5;
+var startingTravelSpeed = 5;
+var speedupFactor = 5;
+var score = 0;
 var jump = false;
 var onGround = true;
 var CubeLane = 0;
@@ -227,7 +379,14 @@ var laneWidth = 4;
 
 function generateLevelPart() {
     var LevelPart = new LevelPiece();
-    LevelPart.Ground = Object.assign({}, GroundPlane);
+    LevelPart.Ground = GroundPlane.clone();
+    for (var i = 0; i <= Math.round(score / 1000); i++) {
+        //console.log("obstacle")
+        LevelPart.gameObject.push(Obstacle.clone());
+        var posX = (Math.random() * 2 - 1) * laneWidth;
+        LevelPart.gameObject[i].RelativePosition[0] = posX;
+        LevelPart.gameObject[i].RelativePosition[1] = 1;
+    }
     return LevelPart;
 }
 
@@ -242,12 +401,14 @@ function initializeGame() {
     //Variables for storing world data
     for (var i = 0; i < LevelPart.length; i++) {
         LevelPart[i] = generateLevelPart();
-        LevelPart[i].Position = [0, 0, -3 * laneWidth * i];
+        LevelPart[i].partPosition = [0, 0, -3 * laneWidth * i];
+        if (i < 5) {
+            LevelPart[i].gameObject = [];
+        }
         LevelPart[i].moveComponents();
     }
 
 }
-
 
 function setCameraPosition(pMatrix, posX, posY, posZ, pitch, yaw) {
     mat4.rotate(pMatrix, degToRad(pitch), [1, 0, 0]);
@@ -437,6 +598,13 @@ function initTextures() {
     };
     GroundPlane.Texture.image.src = "./assets/wall.png";
 
+    Obstacle.Texture = gl.createTexture();
+    Obstacle.Texture.image = new Image();
+    Obstacle.Texture.image.onload = function () {
+        handleTextureLoaded(Obstacle.Texture)
+    };
+    Obstacle.Texture.image.src = "./assets/wall.png";
+
     //console.log("initializing GroundPlane");
 
     Cube.Texture = gl.createTexture();
@@ -522,6 +690,7 @@ function initGameObjectBuffers(gameObject, vertices, vertexNormals, textureCoord
 function initBuffers() {
     initGameObjectBuffers(GroundPlane, GroundPlaneVertices, GroundPlaneVertexNormals, GroundPlaneTextureCoords, GroundPlaneVertexIndices);
     initGameObjectBuffers(Cube, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
+    initGameObjectBuffers(Obstacle, ObstacleVertices, ObstacleVertexNormals, ObstacleTextureCoords, ObstacleVertexIndices);
 }
 
 //
@@ -631,10 +800,12 @@ function drawScene() {
     setUpShaderAndLight();
 
     drawObject(Cube);
-    for (var i = 0; i < LevelPart.length; i++)
+    for (var i = 0; i < LevelPart.length; i++) {
         drawObject(LevelPart[i].Ground);
-
-
+        for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
+            drawObject(LevelPart[i].gameObject[j]);
+        }
+    }
 }
 
 //
@@ -650,13 +821,17 @@ function moveObjects(elapsed) {
     Cube.Rotation[1] += Cube.RotationSpeed[1] * elapsed / 1000;
     Cube.Rotation[2] += Cube.RotationSpeed[2] * elapsed / 1000;
     for (var i = 0; i < LevelPart.length; i++) {
-        LevelPart[i].Position[2] += elapsed * travelSpeed / 1000;
+        LevelPart[i].partPosition[2] += elapsed * (startingTravelSpeed + speedupFactor * score / 1000) / 1000;
         LevelPart[i].moveComponents();
     }
-    if (LevelPart[0].Position[2] > laneWidth * 3) {
+    if (LevelPart[0].partPosition[2] > laneWidth * 3) {
         LevelPart.shift();
         LevelPart.push(generateLevelPart());
-        LevelPart[LevelPart.length - 1].Position[2] = LevelPart[LevelPart.length - 2].Position[2] - 3 * laneWidth;
+        LevelPart[LevelPart.length - 1].partPosition[2] = LevelPart[LevelPart.length - 2].partPosition[2] - 3 * laneWidth;
+        LevelPart[LevelPart.length - 1].moveComponents();
+        console.log(LevelPart[1].partPosition);
+        console.log(LevelPart[1].Ground.Position);
+        console.log(LevelPart[1].Ground.RelativePosition);
     }
 }
 
@@ -810,7 +985,8 @@ function start() {
                 handleKeys();
                 drawScene();
                 var currTime = new Date().getTime();
-                document.getElementById("score").innerHTML = "Score: "+(Math.round((currTime-StartTime)*travelSpeed/100)/10).toString();
+                score = Math.round((currTime - StartTime) * startingTravelSpeed / 100) / 10;
+                document.getElementById("score").innerHTML = "Score: " + score.toString();
             }
         }, 15);
 

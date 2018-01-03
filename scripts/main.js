@@ -693,7 +693,7 @@ function moveObjects(elapsed) {
 function animate() {
     var timeNow = new Date().getTime();
     var sideAcc = 150;
-    var maxSpeed = 20;
+    var maxSpeed = 15;
     if (lastTime !== 0) {
         var elapsed = timeNow - lastTime;
         // console.log(cubeLane);
@@ -709,7 +709,7 @@ function animate() {
             moveSpeedCube[0]=0;
             //console.log("not moving");
         } else {
-            if (Math.abs(distance) < Math.abs((moveSpeedCube[0]) * (moveSpeedCube[0] / sideAcc))) {
+            if (Math.abs(distance) < Math.abs((moveSpeedCube[0]/2) * (moveSpeedCube[0] / sideAcc))) {
                 //console.log("if looks good");
                 if (distance < 0)
                     moveSpeedCube[0] += sideAcc * elapsed / 1000;

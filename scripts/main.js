@@ -31,6 +31,7 @@ class LevelPiece {
     }
 }
 
+// arrays for object buffers
 var CubeVertices = [
     // Front face
     -1.0, -1.0, 1.0,
@@ -68,8 +69,6 @@ var CubeVertices = [
     -1.0, 1.0, 1.0,
     -1.0, 1.0, -1.0
 ];
-
-// Now create an array of vertex normals for the GameObject.
 var CubeVertexNormals = [
     // Front face
     0.0, 0.0, 1.0,
@@ -107,9 +106,6 @@ var CubeVertexNormals = [
     -1.0, 0.0, 0.0,
     -1.0, 0.0, 0.0
 ];
-
-
-// Now create an array of vertex texture coordinates for the GameObject.
 var CubeTextureCoords = [
     // Front face
     0.0, 0.0,
@@ -147,8 +143,6 @@ var CubeTextureCoords = [
     1.0, 1.0,
     0.0, 1.0
 ];
-// Buffers
-
 var CubeVertexIndices = [
     0, 1, 2, 0, 2, 3,    // Front face
     4, 5, 6, 4, 6, 7,    // Back face
@@ -156,6 +150,31 @@ var CubeVertexIndices = [
     12, 13, 14, 12, 14, 15, // Bottom face
     16, 17, 18, 16, 18, 19, // Right face
     20, 21, 22, 20, 22, 23  // Left face
+];
+
+var GroundPlaneVertices = [
+    // MAIN PLANE
+    -6.0, 0.0, -500.0,
+    6.0, 0.0, -500.0,
+    6.0, 0.0, 0.0,
+    -6.0, 0.0, 0.0
+];
+var GroundPlaneVertexNormals = [
+    // plane
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0
+];
+var GroundPlaneTextureCoords = [
+    // plane
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0
+];
+var GroundPlaneVertexIndices = [
+    2, 1, 0, 3, 2, 0    // MAIN PLANE
 ];
 
 
@@ -476,7 +495,7 @@ function initGameObjectBuffers(GameObject, vertices, vertexNormals, textureCoord
 
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(vertexIndices), gl.STATIC_DRAW);
     GameObject.VertexIndexBuffer.itemSize = 1;
-    GameObject.VertexIndexBuffer.numItems = 36;
+    GameObject.VertexIndexBuffer.numItems = vertexIndices.length;
 }
 
 
@@ -488,81 +507,7 @@ function initGameObjectBuffers(GameObject, vertices, vertexNormals, textureCoord
 //
 
 function initBuffers() {
-
-
-    // GroundPlane PLANE
-    // Create a buffer for the Plane's vertices.
-    GroundPlane.VertexPositionBuffer = gl.createBuffer();
-
-    // Select the GroundPlane.VertexPositionBuffer as the one to apply vertex
-    // operations to from here out.
-    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexPositionBuffer);
-
-    // Now create an array of vertices for the GroundPlane.
-    vertices = [
-        // MAIN PLANE
-        -6.0, 0.0, -500.0,
-        6.0, 0.0, -500.0,
-        6.0, 0.0, 0.0,
-        -6.0, 0.0, 0.0
-    ];
-
-    // Now pass the list of vertices into WebGL to build the shape. We
-    // do this by creating a Float32Array from the JavaScript array,
-    // then use it to fill the current vertex buffer.
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    GroundPlane.VertexPositionBuffer.itemSize = 3;
-    GroundPlane.VertexPositionBuffer.numItems = 4;
-
-    // Map the normals onto the GroundPlane's faces.
-    GroundPlane.VertexNormalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexNormalBuffer);
-
-    // Now create an array of vertex normals for the GroundPlane.
-    var vertexNormals = [
-        // plane
-        0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0
-    ];
-
-    // Pass the normals into WebGL
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-    GroundPlane.VertexNormalBuffer.itemSize = 3;
-    GroundPlane.VertexNormalBuffer.numItems = 4;
-
-    // Now create an array of texture coordinates for the GroundPlane.
-    GroundPlane.VertexTextureCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexTextureCoordBuffer);
-
-    // Now create an array of vertex texture coordinates for the GroundPlane.
-    var textureCoords = [
-        // plane
-        1.0, 1.0,
-        0.0, 1.0,
-        0.0, 0.0,
-        1.0, 0.0
-    ];
-
-    // Pass the texture coordinates into WebGL
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
-    GroundPlane.VertexTextureCoordBuffer.itemSize = 2;
-    GroundPlane.VertexTextureCoordBuffer.numItems = 4;
-
-    // This array defines each face as two triangles, using the
-    // indices into the vertex array to specify each triangle's
-    // Position.
-    GroundPlane.VertexIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, GroundPlane.VertexIndexBuffer);
-    var GroundPlaneVertexIndices = [
-        2, 1, 0, 3, 2, 0    // MAIN PLANE
-    ];
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(GroundPlaneVertexIndices), gl.STATIC_DRAW);
-    GroundPlane.VertexIndexBuffer.itemSize = 1;
-    GroundPlane.VertexIndexBuffer.numItems = 6;
-
-
+    initGameObjectBuffers(GroundPlane, GroundPlaneVertices, GroundPlaneVertexNormals, GroundPlaneTextureCoords, GroundPlaneVertexIndices);
     initGameObjectBuffers(Cube, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
 }
 

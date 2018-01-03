@@ -11,28 +11,176 @@ class GameObject {
         this.VertexNormalBuffer;
         this.VertexTextureCoordBuffer;
         this.VertexIndexBuffer;
+        this.Position;
+        this.Rotation;
+        this.Speed;
+        this.RotationSpeed;
     }
 }
 
+class LevelPiece {
+    constructor() {
+        this.Ground;
+        this.GameObject = new Array(3);
+        for (var i = 0; i < 3; i++) {
+            this.GameObject[i] = new Array(3);
+            for (var j = 0; j < 3; j++) {
+                this.GameObject[i][j] = new Array(3);
+            }
+        }
+    }
+}
+
+var CubeVertices = [
+    // Front face
+    -1.0, -1.0, 1.0,
+    1.0, -1.0, 1.0,
+    1.0, 1.0, 1.0,
+    -1.0, 1.0, 1.0,
+
+    // Back face
+    -1.0, -1.0, -1.0,
+    -1.0, 1.0, -1.0,
+    1.0, 1.0, -1.0,
+    1.0, -1.0, -1.0,
+
+    // Top face
+    -1.0, 1.0, -1.0,
+    -1.0, 1.0, 1.0,
+    1.0, 1.0, 1.0,
+    1.0, 1.0, -1.0,
+
+    // Bottom face
+    -1.0, -1.0, -1.0,
+    1.0, -1.0, -1.0,
+    1.0, -1.0, 1.0,
+    -1.0, -1.0, 1.0,
+
+    // Right face
+    1.0, -1.0, -1.0,
+    1.0, 1.0, -1.0,
+    1.0, 1.0, 1.0,
+    1.0, -1.0, 1.0,
+
+    // Left face
+    -1.0, -1.0, -1.0,
+    -1.0, -1.0, 1.0,
+    -1.0, 1.0, 1.0,
+    -1.0, 1.0, -1.0
+];
+
+// Now create an array of vertex normals for the GameObject.
+var CubeVertexNormals = [
+    // Front face
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+
+    // Back face
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+
+    // Top face
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+
+    // Bottom face
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+
+    // Right face
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+
+    // Left face
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0
+];
+
+
+// Now create an array of vertex texture coordinates for the GameObject.
+var CubeTextureCoords = [
+    // Front face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+
+    // Back face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Top face
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+
+    // Bottom face
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+
+    // Right face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Left face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0
+];
 // Buffers
 
-var cube = new GameObject();
-var world = new GameObject();
+var CubeVertexIndices = [
+    0, 1, 2, 0, 2, 3,    // Front face
+    4, 5, 6, 4, 6, 7,    // Back face
+    8, 9, 10, 8, 10, 11,  // Top face
+    12, 13, 14, 12, 14, 15, // Bottom face
+    16, 17, 18, 16, 18, 19, // Right face
+    20, 21, 22, 20, 22, 23  // Left face
+];
+
+
+var Cube = new GameObject();
+var GroundPlane = new GameObject();
+var LevelPart = new Array(10);
+for (var i = 0; i < LevelPart.length; i++) {
+    LevelPart[i] = new LevelPiece();
+    LevelPart[i].Ground = GroundPlane;
+}
 
 // Model-View and Projection matrices
 var mvMatrixStack = [];
 var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 
-// Helper variables for storing current rotation of pyramid and cube
+// Helper variables for storing current Rotation of pyramid and Cube
 
 
 // Helper variable for animation
 var lastTime = 0;
 
 // Variable for storing textures
-var cubeTexture;
-var worldTexture;
+var CubeTexture;
+var GroundPlaneTexture;
 
 // Variable that stores  loading state of textures.
 var numberOfTextures = 2;
@@ -43,17 +191,19 @@ var texturesLoaded = 0;
 var currentlyPressedKeys = {};
 var clickedKeys = {};
 
-// Variables for storing current position of cube
+// Variables for storing game mechanics data
+var travelSpeed = 0;
 var jump = false;
-var positionCube = [0.0, -1.0, -7.0];
-var rotationCube = [0.0, 0.0, 0.0];
-var travelSpeed = -10;
-var moveSpeedCube = [0.0, 0.0, -10, 0];
-var rotationSpeedCube = [0.0, 0.0, 0.0];
 var onGround = true;
-var cubeLane = 0;
+var CubeLane = 0;
 var laneWidth = 4;
-var left
+
+// Variables for storing current Position of Cube
+
+Cube.Position = [0.0, -1.0, -7.0];
+Cube.Rotation = [0.0, 0.0, 0.0];
+Cube.Speed = [0.0, 0.0, travelSpeed];
+Cube.RotationSpeed = [0.0, 0.0, 0.0];
 
 
 //
@@ -187,19 +337,19 @@ function initShaders() {
     // store location of aVertexPosition variable defined in shader
     shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
 
-    // turn on vertex position attribute at specified position
+    // turn on vertex Position attribute at specified Position
     gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
     // store location of vertex normals variable defined in shader
     shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
 
-    // turn on vertex normals attribute at specified position
+    // turn on vertex normals attribute at specified Position
     gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
     // store location of texture coordinate variable defined in shader
     shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
 
-    // turn on texture coordinate attribute at specified position
+    // turn on texture coordinate attribute at specified Position
     gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
     // store location of uPMatrix variable defined in shader - projection matrix
@@ -245,23 +395,23 @@ function setMatrixUniforms() {
 
 function initTextures() {
 
-    worldTexture = gl.createTexture();
-    worldTexture.image = new Image();
-    worldTexture.image.onload = function () {
-        handleTextureLoaded(worldTexture)
+    GroundPlaneTexture = gl.createTexture();
+    GroundPlaneTexture.image = new Image();
+    GroundPlaneTexture.image.onload = function () {
+        handleTextureLoaded(GroundPlaneTexture)
     };
-    worldTexture.image.src = "./assets/wall.png";
+    GroundPlaneTexture.image.src = "./assets/wall.png";
 
-    //console.log("initializing world");
+    //console.log("initializing GroundPlane");
 
-    cubeTexture = gl.createTexture();
-    cubeTexture.image = new Image();
-    cubeTexture.image.onload = function () {
-        handleTextureLoaded(cubeTexture);
+    CubeTexture = gl.createTexture();
+    CubeTexture.image = new Image();
+    CubeTexture.image.onload = function () {
+        handleTextureLoaded(CubeTexture);
     };
-    cubeTexture.image.src = "./assets/crate.gif";
+    CubeTexture.image.src = "./assets/crate.gif";
 
-    //console.log("initializing cube");
+    //console.log("initializing Cube");
 }
 
 function handleTextureLoaded(texture) {
@@ -282,24 +432,73 @@ function handleTextureLoaded(texture) {
     texturesLoaded += 1;
 }
 
+
+function initGameObjectBuffers(GameObject, vertices, vertexNormals, textureCoords, vertexIndices) {
+    GameObject.VertexPositionBuffer = gl.createBuffer();
+
+    // Select the GameObject.VertexPositionBuffer as the one to apply vertex
+    // operations to from here out.
+    gl.bindBuffer(gl.ARRAY_BUFFER, GameObject.VertexPositionBuffer);
+
+
+    // Now pass the list of vertices into WebGL to build the shape. We
+    // do this by creating a Float32Array from the JavaScript array,
+    // then use it to fill the current vertex buffer.
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    GameObject.VertexPositionBuffer.itemSize = 3;
+    GameObject.VertexPositionBuffer.numItems = vertices.length / 3;
+
+    // Map the normals onto the GameObject's faces.
+    GameObject.VertexNormalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, GameObject.VertexNormalBuffer);
+
+
+    // Pass the normals into WebGL
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+    GameObject.VertexNormalBuffer.itemSize = 3;
+    GameObject.VertexNormalBuffer.numItems = vertexNormals.length / 3;
+
+    // Now create an array of texture coordinates for the GameObject.
+    GameObject.VertexTextureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, GameObject.VertexTextureCoordBuffer);
+
+
+    // Pass the texture coordinates into WebGL
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+    GameObject.VertexTextureCoordBuffer.itemSize = 2;
+    GameObject.VertexTextureCoordBuffer.numItems = 24;
+
+    // This array defines each face as two triangles, using the
+    // indices into the vertex array to specify each triangle's
+    // Position.
+    GameObject.VertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, GameObject.VertexIndexBuffer);
+
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(vertexIndices), gl.STATIC_DRAW);
+    GameObject.VertexIndexBuffer.itemSize = 1;
+    GameObject.VertexIndexBuffer.numItems = 36;
+}
+
+
 //
 // initBuffers
 //
 // Initialize the buffers we'll need. For this demo, we just have
-// two objects -- a simple two-dimensional pyramid and cube.
+// two objects -- a simple two-dimensional pyramid and Cube.
 //
+
 function initBuffers() {
 
 
-    // WORLD PLANE
-    // Create a buffer for the cube's vertices.
-    world.VertexPositionBuffer = gl.createBuffer();
+    // GroundPlane PLANE
+    // Create a buffer for the Plane's vertices.
+    GroundPlane.VertexPositionBuffer = gl.createBuffer();
 
-    // Select the world.VertexPositionBuffer as the one to apply vertex
+    // Select the GroundPlane.VertexPositionBuffer as the one to apply vertex
     // operations to from here out.
-    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexPositionBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexPositionBuffer);
 
-    // Now create an array of vertices for the world.
+    // Now create an array of vertices for the GroundPlane.
     vertices = [
         // MAIN PLANE
         -6.0, 0.0, -500.0,
@@ -312,14 +511,14 @@ function initBuffers() {
     // do this by creating a Float32Array from the JavaScript array,
     // then use it to fill the current vertex buffer.
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    world.VertexPositionBuffer.itemSize = 3;
-    world.VertexPositionBuffer.numItems = 4;
+    GroundPlane.VertexPositionBuffer.itemSize = 3;
+    GroundPlane.VertexPositionBuffer.numItems = 4;
 
-    // Map the normals onto the world's faces.
-    world.VertexNormalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexNormalBuffer);
+    // Map the normals onto the GroundPlane's faces.
+    GroundPlane.VertexNormalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexNormalBuffer);
 
-    // Now create an array of vertex normals for the world.
+    // Now create an array of vertex normals for the GroundPlane.
     var vertexNormals = [
         // plane
         0.0, 1.0, 0.0,
@@ -330,14 +529,14 @@ function initBuffers() {
 
     // Pass the normals into WebGL
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-    world.VertexNormalBuffer.itemSize = 3;
-    world.VertexNormalBuffer.numItems = 4;
+    GroundPlane.VertexNormalBuffer.itemSize = 3;
+    GroundPlane.VertexNormalBuffer.numItems = 4;
 
-    // Now create an array of texture coordinates for the world.
-    world.VertexTextureCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexTextureCoordBuffer);
+    // Now create an array of texture coordinates for the GroundPlane.
+    GroundPlane.VertexTextureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexTextureCoordBuffer);
 
-    // Now create an array of vertex texture coordinates for the world.
+    // Now create an array of vertex texture coordinates for the GroundPlane.
     var textureCoords = [
         // plane
         1.0, 1.0,
@@ -348,188 +547,23 @@ function initBuffers() {
 
     // Pass the texture coordinates into WebGL
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
-    world.VertexTextureCoordBuffer.itemSize = 2;
-    world.VertexTextureCoordBuffer.numItems = 4;
+    GroundPlane.VertexTextureCoordBuffer.itemSize = 2;
+    GroundPlane.VertexTextureCoordBuffer.numItems = 4;
 
     // This array defines each face as two triangles, using the
     // indices into the vertex array to specify each triangle's
-    // position.
-    world.VertexIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, world.VertexIndexBuffer);
-    var worldVertexIndices = [
+    // Position.
+    GroundPlane.VertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, GroundPlane.VertexIndexBuffer);
+    var GroundPlaneVertexIndices = [
         2, 1, 0, 3, 2, 0    // MAIN PLANE
     ];
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(worldVertexIndices), gl.STATIC_DRAW);
-    world.VertexIndexBuffer.itemSize = 1;
-    world.VertexIndexBuffer.numItems = 6;
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(GroundPlaneVertexIndices), gl.STATIC_DRAW);
+    GroundPlane.VertexIndexBuffer.itemSize = 1;
+    GroundPlane.VertexIndexBuffer.numItems = 6;
 
-    //CUBE
-    // Create a buffer for the cube's vertices.
-    cube.VertexPositionBuffer = gl.createBuffer();
 
-    // Select the cube.VertexPositionBuffer as the one to apply vertex
-    // operations to from here out.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexPositionBuffer);
-
-    // Now create an array of vertices for the cube.
-    vertices = [
-        // Front face
-        -1.0, -1.0, 1.0,
-        1.0, -1.0, 1.0,
-        1.0, 1.0, 1.0,
-        -1.0, 1.0, 1.0,
-
-        // Back face
-        -1.0, -1.0, -1.0,
-        -1.0, 1.0, -1.0,
-        1.0, 1.0, -1.0,
-        1.0, -1.0, -1.0,
-
-        // Top face
-        -1.0, 1.0, -1.0,
-        -1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-        1.0, 1.0, -1.0,
-
-        // Bottom face
-        -1.0, -1.0, -1.0,
-        1.0, -1.0, -1.0,
-        1.0, -1.0, 1.0,
-        -1.0, -1.0, 1.0,
-
-        // Right face
-        1.0, -1.0, -1.0,
-        1.0, 1.0, -1.0,
-        1.0, 1.0, 1.0,
-        1.0, -1.0, 1.0,
-
-        // Left face
-        -1.0, -1.0, -1.0,
-        -1.0, -1.0, 1.0,
-        -1.0, 1.0, 1.0,
-        -1.0, 1.0, -1.0
-    ];
-
-    // Now pass the list of vertices into WebGL to build the shape. We
-    // do this by creating a Float32Array from the JavaScript array,
-    // then use it to fill the current vertex buffer.
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    cube.VertexPositionBuffer.itemSize = 3;
-    cube.VertexPositionBuffer.numItems = 24;
-
-    // Map the normals onto the cube's faces.
-    cube.VertexNormalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexNormalBuffer);
-
-    // Now create an array of vertex normals for the cube.
-    var vertexNormals = [
-        // Front face
-        0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0,
-
-        // Back face
-        0.0, 0.0, -1.0,
-        0.0, 0.0, -1.0,
-        0.0, 0.0, -1.0,
-        0.0, 0.0, -1.0,
-
-        // Top face
-        0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 1.0, 0.0,
-
-        // Bottom face
-        0.0, -1.0, 0.0,
-        0.0, -1.0, 0.0,
-        0.0, -1.0, 0.0,
-        0.0, -1.0, 0.0,
-
-        // Right face
-        1.0, 0.0, 0.0,
-        1.0, 0.0, 0.0,
-        1.0, 0.0, 0.0,
-        1.0, 0.0, 0.0,
-
-        // Left face
-        -1.0, 0.0, 0.0,
-        -1.0, 0.0, 0.0,
-        -1.0, 0.0, 0.0,
-        -1.0, 0.0, 0.0
-    ];
-
-    // Pass the normals into WebGL
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
-    cube.VertexNormalBuffer.itemSize = 3;
-    cube.VertexNormalBuffer.numItems = 24;
-
-    // Now create an array of texture coordinates for the cube.
-    cube.VertexTextureCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexTextureCoordBuffer);
-
-    // Now create an array of vertex texture coordinates for the cube.
-    var textureCoords = [
-        // Front face
-        0.0, 0.0,
-        1.0, 0.0,
-        1.0, 1.0,
-        0.0, 1.0,
-
-        // Back face
-        1.0, 0.0,
-        1.0, 1.0,
-        0.0, 1.0,
-        0.0, 0.0,
-
-        // Top face
-        0.0, 1.0,
-        0.0, 0.0,
-        1.0, 0.0,
-        1.0, 1.0,
-
-        // Bottom face
-        1.0, 1.0,
-        0.0, 1.0,
-        0.0, 0.0,
-        1.0, 0.0,
-
-        // Right face
-        1.0, 0.0,
-        1.0, 1.0,
-        0.0, 1.0,
-        0.0, 0.0,
-
-        // Left face
-        0.0, 0.0,
-        1.0, 0.0,
-        1.0, 1.0,
-        0.0, 1.0
-    ];
-
-    // Pass the texture coordinates into WebGL
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
-    cube.VertexTextureCoordBuffer.itemSize = 2;
-    cube.VertexTextureCoordBuffer.numItems = 24;
-
-    // This array defines each face as two triangles, using the
-    // indices into the vertex array to specify each triangle's
-    // position.
-    cube.VertexIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.VertexIndexBuffer);
-    var cubeVertexIndices = [
-        0, 1, 2, 0, 2, 3,    // Front face
-        4, 5, 6, 4, 6, 7,    // Back face
-        8, 9, 10, 8, 10, 11,  // Top face
-        12, 13, 14, 12, 14, 15, // Bottom face
-        16, 17, 18, 16, 18, 19, // Right face
-        20, 21, 22, 20, 22, 23  // Left face
-    ];
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
-    cube.VertexIndexBuffer.itemSize = 1;
-    cube.VertexIndexBuffer.numItems = 36;
-
+    initGameObjectBuffers(Cube, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
 }
 
 //
@@ -537,6 +571,7 @@ function initBuffers() {
 //
 // Draw the scene.
 //
+
 function drawScene() {
     // set the rendering environment to full canvas size
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -548,7 +583,7 @@ function drawScene() {
     // ratio and we only want to see objects between 0.1 units
     // and 100 units away from the camera.
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-    setCameraPosition(pMatrix, positionCube[0] / 2, positionCube[1] / 2 + 3, positionCube[2] + 10, 10, 0);
+    setCameraPosition(pMatrix, Cube.Position[0] / 2, Cube.Position[1] / 2 + 3, Cube.Position[2] + 10, 10, 0);
 
     var lighting = true;
     gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);
@@ -556,7 +591,7 @@ function drawScene() {
     gl.uniform1i(shaderProgram.useTexturesUniform, true);
     gl.uniform1f(shaderProgram.materialShininessUniform, 1000);
 
-    // Set the drawing position to the "identity" point, which is
+    // Set the drawing Position to the "identity" point, which is
     // the center of the scene.
     mat4.identity(mvMatrix);
 
@@ -594,84 +629,84 @@ function drawScene() {
     // set uniform to the value of the checkbox.
     gl.uniform1i(shaderProgram.useTexturesUniform, true);
 
-    // world:
+    // GroundPlane:
 
-    // Set the drawing position to the "identity" point, which is
+    // Set the drawing Position to the "identity" point, which is
     // the center of the scene.
     mat4.identity(mvMatrix);
 
-    // Now move the drawing position a bit to where we want to start
-    // drawing the world.
+    // Now move the drawing Position a bit to where we want to start
+    // drawing the GroundPlane.
     mat4.translate(mvMatrix, [0.0, -2.0, -7.0]);
 
     // Save the current matrix, then rotate before we draw.
     mvPushMatrix();
 
-    // Set the vertex positions attribute for the world vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, world.VertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    // Set the vertex Positions attribute for the GroundPlane vertices.
+    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, GroundPlane.VertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the normals attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, world.VertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, GroundPlane.VertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the texture coordinates attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, world.VertexTextureCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, world.VertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, GroundPlane.VertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, GroundPlane.VertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Activate textures
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, worldTexture);
+    gl.bindTexture(gl.TEXTURE_2D, GroundPlaneTexture);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
 
-    // Draw the world.
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, world.VertexIndexBuffer);
+    // Draw the GroundPlane.
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, GroundPlane.VertexIndexBuffer);
     setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, world.VertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(gl.TRIANGLES, GroundPlane.VertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
     // Restore the original matrix
     mvPopMatrix();
 
     mvPushMatrix();
 
-    // CUBE:
+    // Cube:
 
-    // Set the drawing position to the "identity" point, which is
+    // Set the drawing Position to the "identity" point, which is
     // the center of the scene.
     mat4.identity(mvMatrix);
     //setCameraPosition(0, 0, 2, 0, 0);
 
-    // Now move the drawing position a bit to where we want to start
-    // drawing the cube.
-    mat4.translate(mvMatrix, positionCube);
+    // Now move the drawing Position a bit to where we want to start
+    // drawing the Cube.
+    mat4.translate(mvMatrix, Cube.Position);
 
     // Save the current matrix, then rotate before we draw.
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(rotationCube[0]), [1, 0, 0]);
-    mat4.rotate(mvMatrix, degToRad(rotationCube[1]), [0, 1, 0]);
-    mat4.rotate(mvMatrix, degToRad(rotationCube[2]), [0, 0, 1]);
+    mat4.rotate(mvMatrix, degToRad(Cube.Rotation[0]), [1, 0, 0]);
+    mat4.rotate(mvMatrix, degToRad(Cube.Rotation[1]), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(Cube.Rotation[2]), [0, 0, 1]);
 
-    // Set the vertex positions attribute for the cube vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cube.VertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    // Set the vertex Positions attribute for the Cube vertices.
+    gl.bindBuffer(gl.ARRAY_BUFFER, Cube.VertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, Cube.VertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the normals attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cube.VertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, Cube.VertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, Cube.VertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Set the texture coordinates attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, cube.VertexTextureCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cube.VertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, Cube.VertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, Cube.VertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     // Activate textures
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, cubeTexture);
+    gl.bindTexture(gl.TEXTURE_2D, CubeTexture);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
 
-    // Draw the cube.
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.VertexIndexBuffer);
+    // Draw the Cube.
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, Cube.VertexIndexBuffer);
     setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, cube.VertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(gl.TRIANGLES, Cube.VertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
     // Restore the original matrix
     mvPopMatrix();
@@ -684,12 +719,12 @@ function drawScene() {
 //
 
 function moveObjects(elapsed) {
-    positionCube[0] += moveSpeedCube[0] * elapsed / 1000;
-    positionCube[1] += moveSpeedCube[1] * elapsed / 1000;
-    positionCube[2] += moveSpeedCube[2] * elapsed / 1000;
-    rotationCube[0] += rotationSpeedCube[0] * elapsed / 1000;
-    rotationCube[1] += rotationSpeedCube[1] * elapsed / 1000;
-    rotationCube[2] += rotationSpeedCube[2] * elapsed / 1000;
+    Cube.Position[0] += Cube.Speed[0] * elapsed / 1000;
+    Cube.Position[1] += Cube.Speed[1] * elapsed / 1000;
+    Cube.Position[2] += Cube.Speed[2] * elapsed / 1000;
+    Cube.Rotation[0] += Cube.RotationSpeed[0] * elapsed / 1000;
+    Cube.Rotation[1] += Cube.RotationSpeed[1] * elapsed / 1000;
+    Cube.Rotation[2] += Cube.RotationSpeed[2] * elapsed / 1000;
 }
 
 
@@ -699,59 +734,59 @@ function animate() {
     var maxSpeed = 15;
     if (lastTime !== 0) {
         var elapsed = timeNow - lastTime;
-        // console.log(cubeLane);
-        //console.log(cubeLane*laneWidth);
-        //console.log(positionCube[0]);
-        var distance = laneWidth * cubeLane - positionCube[0];
+        // console.log(CubeLane);
+        //console.log(CubeLane*laneWidth);
+        //console.log(Cube.Position[0]);
+        var distance = laneWidth * CubeLane - Cube.Position[0];
         //console.log(distance);
-        //console.log(Math.abs((moveSpeedCube[0]) * (moveSpeedCube[0] / sideAcc)));
-        //console.log(moveSpeedCube[0]);
+        //console.log(Math.abs((Cube.Speed[0]) * (Cube.Speed[0] / sideAcc)));
+        //console.log(Cube.Speed[0]);
 
 
         if (Math.abs(distance) < 0.05) {
-            moveSpeedCube[0] = 0;
+            Cube.Speed[0] = 0;
             //console.log("not moving");
         } else {
-            if (Math.abs(distance) < Math.abs((moveSpeedCube[0] / 2) * (moveSpeedCube[0] / sideAcc))) {
+            if (Math.abs(distance) < Math.abs((Cube.Speed[0] / 2) * (Cube.Speed[0] / sideAcc))) {
                 //console.log("if looks good");
                 if (distance < 0)
-                    moveSpeedCube[0] += sideAcc * elapsed / 1000;
+                    Cube.Speed[0] += sideAcc * elapsed / 1000;
                 else
-                    moveSpeedCube[0] -= sideAcc * elapsed / 1000;
+                    Cube.Speed[0] -= sideAcc * elapsed / 1000;
             } else {
                 //console.log("if doesn't look good");
                 if (distance > 0)
-                    moveSpeedCube[0] += sideAcc * elapsed / 1000;
+                    Cube.Speed[0] += sideAcc * elapsed / 1000;
                 else
-                    moveSpeedCube[0] -= sideAcc * elapsed / 1000;
+                    Cube.Speed[0] -= sideAcc * elapsed / 1000;
             }
-            if (moveSpeedCube[0] > maxSpeed)
-                moveSpeedCube[0] = maxSpeed;
-            if (moveSpeedCube[0] < -maxSpeed)
-                moveSpeedCube[0] = -maxSpeed;
+            if (Cube.Speed[0] > maxSpeed)
+                Cube.Speed[0] = maxSpeed;
+            if (Cube.Speed[0] < -maxSpeed)
+                Cube.Speed[0] = -maxSpeed;
 
         }
 
 
-        // rotate pyramid and cube for a small amount
+        // rotate pyramid and Cube for a small amount
         if (jump && onGround) {
-            moveSpeedCube[1] = 20;
+            Cube.Speed[1] = 20;
             onGround = false;
             jump = false;
         }
         if (!onGround) {
-            moveSpeedCube[1] -= 60 * elapsed / 1000;
-            rotationSpeedCube[0] = -560;
+            Cube.Speed[1] -= 60 * elapsed / 1000;
+            Cube.RotationSpeed[0] = -560;
         }
 
         moveObjects(elapsed);
 
-        if (!(positionCube[1] <= -1 && !onGround)) {
+        if (!(Cube.Position[1] <= -1 && !onGround)) {
         } else {
-            positionCube[1] = -1;
-            moveSpeedCube[1] = 0;
-            rotationSpeedCube[0] = 0;
-            rotationCube[0] = Math.round((rotationCube[0] / 90)) * 90;
+            Cube.Position[1] = -1;
+            Cube.Speed[1] = 0;
+            Cube.RotationSpeed[0] = 0;
+            Cube.Rotation[0] = Math.round((Cube.Rotation[0] / 90)) * 90;
             onGround = true;
             jump = false
         }
@@ -785,13 +820,13 @@ function handleKeys() {
 
     if (clickedKeys[37]) {
         // Left cursor key
-        if (cubeLane > -1)
-            cubeLane--;
+        if (CubeLane > -1)
+            CubeLane--;
         clickedKeys[37] = false;
     } else if (clickedKeys[39]) {
         // Right cursor key
-        if (cubeLane < 1)
-            cubeLane++;
+        if (CubeLane < 1)
+            CubeLane++;
         clickedKeys[39] = false;
     }
     if (currentlyPressedKeys[38]) {

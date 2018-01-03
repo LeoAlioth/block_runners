@@ -623,7 +623,7 @@ function initTextures() {
     Obstacle.Texture.image.onload = function () {
         handleTextureLoaded(Obstacle.Texture)
     };
-    Obstacle.Texture.image.src = "./assets/wall.png";
+    Obstacle.Texture.image.src = "./assets/glass.gif";
 
     //console.log("initializing GroundPlane");
 
@@ -632,7 +632,7 @@ function initTextures() {
     Cube.Texture.image.onload = function () {
         handleTextureLoaded(Cube.Texture);
     };
-    Cube.Texture.image.src = "./assets/crate.gif";
+    Cube.Texture.image.src = "./assets/crate.png";
 
     //console.log("initializing Cube");
 }

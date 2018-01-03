@@ -687,6 +687,9 @@ function moveObjects(elapsed) {
     positionCube[0] += moveSpeedCube[0] * elapsed / 1000;
     positionCube[1] += moveSpeedCube[1] * elapsed / 1000;
     positionCube[2] += moveSpeedCube[2] * elapsed / 1000;
+    rotationCube[0] += rotationSpeedCube[0] * elapsed / 1000;
+    rotationCube[1] += rotationSpeedCube[1] * elapsed / 1000;
+    rotationCube[2] += rotationSpeedCube[2] * elapsed / 1000;
 }
 
 
@@ -705,11 +708,11 @@ function animate() {
         //console.log(moveSpeedCube[0]);
 
 
-        if(Math.abs(distance) < 0.05){
-            moveSpeedCube[0]=0;
+        if (Math.abs(distance) < 0.05) {
+            moveSpeedCube[0] = 0;
             //console.log("not moving");
         } else {
-            if (Math.abs(distance) < Math.abs((moveSpeedCube[0]/2) * (moveSpeedCube[0] / sideAcc))) {
+            if (Math.abs(distance) < Math.abs((moveSpeedCube[0] / 2) * (moveSpeedCube[0] / sideAcc))) {
                 //console.log("if looks good");
                 if (distance < 0)
                     moveSpeedCube[0] += sideAcc * elapsed / 1000;
@@ -717,14 +720,14 @@ function animate() {
                     moveSpeedCube[0] -= sideAcc * elapsed / 1000;
             } else {
                 //console.log("if doesn't look good");
-                if (distance > 0 )
+                if (distance > 0)
                     moveSpeedCube[0] += sideAcc * elapsed / 1000;
                 else
                     moveSpeedCube[0] -= sideAcc * elapsed / 1000;
             }
-            if(moveSpeedCube[0]> maxSpeed)
+            if (moveSpeedCube[0] > maxSpeed)
                 moveSpeedCube[0] = maxSpeed;
-            if(moveSpeedCube[0] < -maxSpeed)
+            if (moveSpeedCube[0] < -maxSpeed)
                 moveSpeedCube[0] = -maxSpeed;
 
         }
@@ -732,19 +735,23 @@ function animate() {
 
         // rotate pyramid and cube for a small amount
         if (jump && onGround) {
-            moveSpeedCube[1] = 15;
+            moveSpeedCube[1] = 20;
             onGround = false;
             jump = false;
         }
         if (!onGround) {
-            moveSpeedCube[1] -= 50 * elapsed / 1000;
+            moveSpeedCube[1] -= 60 * elapsed / 1000;
+            rotationSpeedCube[0] = -560;
         }
 
         moveObjects(elapsed);
 
-        if (positionCube[1] <= -1 && !onGround) {
+        if (!(positionCube[1] <= -1 && !onGround)) {
+        } else {
             positionCube[1] = -1;
             moveSpeedCube[1] = 0;
+            rotationSpeedCube[0] = 0;
+            rotationCube[0] = Math.round((rotationCube[0] / 90)) * 90;
             onGround = true;
             jump = false
         }
@@ -780,12 +787,12 @@ function handleKeys() {
         // Left cursor key
         if (cubeLane > -1)
             cubeLane--;
-        clickedKeys[37]=false;
+        clickedKeys[37] = false;
     } else if (clickedKeys[39]) {
         // Right cursor key
         if (cubeLane < 1)
             cubeLane++;
-        clickedKeys[39]=false;
+        clickedKeys[39] = false;
     }
     if (currentlyPressedKeys[38]) {
         // Up cursor key

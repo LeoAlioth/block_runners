@@ -395,13 +395,13 @@ var laneWidth = 4;
 function generateLevelPart() {
     var LevelPart = new LevelPiece();
     LevelPart.Ground = GroundPlane.clone();
-    for (var i = 0; i <= Math.round(score / 250); i++) {
+    for (var i = 0; i <= Math.round(score / 1000); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
         LevelPart.gameObject.Position = [0, 0, 0];
         LevelPart.gameObject.RelativePosition = [0, 0, 0];
         var posX = (Math.random() * 2 - 1) * laneWidth;
-        var posY = Math.round(Math.random()) * laneWidth*3/4 + 1;
+        var posY = Math.round(Math.random()*0.6) * laneWidth*3/4 + 1;
         var posZ = (Math.random() * 2 - 1) * laneWidth;
         LevelPart.gameObject[i].RelativePosition[0] = posX;
         LevelPart.gameObject[i].RelativePosition[1] = posY;

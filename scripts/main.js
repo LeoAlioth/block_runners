@@ -33,7 +33,7 @@ class LevelPiece {
         }
     }
 
-    moveComponents(){
+    moveComponents() {
         this.Ground.Position = this.Position;
     }
 }
@@ -41,6 +41,7 @@ class LevelPiece {
 var Cube = new GameObject();
 var GroundPlane = new GameObject();
 var LevelPart = new Array(20);
+var StartTime;
 
 
 // arrays for object buffers
@@ -224,7 +225,7 @@ var laneWidth = 4;
 // degToRad ... convert degrees to radians
 //
 
-function generateLevelPart(){
+function generateLevelPart() {
     var LevelPart = new LevelPiece();
     LevelPart.Ground = Object.assign({}, GroundPlane);
     return LevelPart;
@@ -652,10 +653,10 @@ function moveObjects(elapsed) {
         LevelPart[i].Position[2] += elapsed * travelSpeed / 1000;
         LevelPart[i].moveComponents();
     }
-    if(LevelPart[0].Position[2] > laneWidth*3){
+    if (LevelPart[0].Position[2] > laneWidth * 3) {
         LevelPart.shift();
         LevelPart.push(generateLevelPart());
-        LevelPart[LevelPart.length-1].Position[2] = LevelPart[LevelPart.length-2].Position[2]-3*laneWidth;
+        LevelPart[LevelPart.length - 1].Position[2] = LevelPart[LevelPart.length - 2].Position[2] - 3 * laneWidth;
     }
 }
 
@@ -801,13 +802,15 @@ function start() {
         document.onkeyup = handleKeyUp;
 
         initializeGame();
-
+        StartTime = new Date().getTime();
         // Set up to draw the scene periodically every 15ms.
         setInterval(function () {
             if (texturesLoaded === numberOfTextures) {
                 requestAnimationFrame(animate);
                 handleKeys();
                 drawScene();
+                var currTime = new Date().getTime();
+                document.getElementById("score").innerHTML = "Score: "+(Math.round((currTime-StartTime)*travelSpeed/100)/10).toString();
             }
         }, 15);
 

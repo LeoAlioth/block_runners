@@ -27,11 +27,26 @@ class GameObject {
         tmp.VertexTextureCoordBuffer = this.VertexTextureCoordBuffer;
         tmp.VertexIndexBuffer = this.VertexIndexBuffer;
         tmp.Texture = this.Texture;
-        tmp.Position = this.Position;
-        tmp.RelativePosition = this.RelativePosition;
-        tmp.Rotation = this.Rotation;
-        tmp.Speed = this.Speed;
-        tmp.RotationSpeed = this.RotationSpeed;
+        tmp.Position = [0, 0, 0]
+        tmp.Position[0] = this.Position[0];
+        tmp.Position[1] = this.Position[1];
+        tmp.Position[2] = this.Position[2];
+        tmp.RelativePosition = [0, 0, 0]
+        tmp.RelativePosition[0] = this.RelativePosition[0];
+        tmp.RelativePosition[1] = this.RelativePosition[1];
+        tmp.RelativePosition[2] = this.RelativePosition[2];
+        tmp.Rotation = [0, 0, 0]
+        tmp.Rotation[0] = this.Rotation[0];
+        tmp.Rotation[1] = this.Rotation[1];
+        tmp.Rotation[2] = this.Rotation[2];
+        tmp.Speed = [0, 0, 0]
+        tmp.Speed[0] = this.Speed[0];
+        tmp.Speed[1] = this.Speed[1];
+        tmp.Speed[2] = this.RelativePosition[2];
+        tmp.RotationSpeed = [0, 0, 0]
+        tmp.RotationSpeed[0] = this.RotationSpeed[0];
+        tmp.RotationSpeed[1] = this.RotationSpeed[1];
+        tmp.RotationSpeed[2] = this.RotationSpeed[2];
         return tmp;
     }
 }
@@ -360,7 +375,7 @@ var currentlyPressedKeys = {};
 var clickedKeys = {};
 
 // Variables for storing game mechanics data
-var startingTravelSpeed = 5;
+var startingTravelSpeed = 7;
 var speedupFactor = 5;
 var score = 0;
 var jump = false;
@@ -380,12 +395,17 @@ var laneWidth = 4;
 function generateLevelPart() {
     var LevelPart = new LevelPiece();
     LevelPart.Ground = GroundPlane.clone();
-    for (var i = 0; i <= Math.round(score / 1000); i++) {
+    for (var i = 0; i <= Math.round(score / 250); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
+        LevelPart.gameObject.Position = [0, 0, 0];
+        LevelPart.gameObject.RelativePosition = [0, 0, 0];
         var posX = (Math.random() * 2 - 1) * laneWidth;
+        var posY = Math.round(Math.random()) * laneWidth/2 + 1;
+        var posZ = (Math.random() * 2 - 1) * laneWidth;
         LevelPart.gameObject[i].RelativePosition[0] = posX;
-        LevelPart.gameObject[i].RelativePosition[1] = 1;
+        LevelPart.gameObject[i].RelativePosition[1] = posY;
+        LevelPart.gameObject[i].RelativePosition[2] = posZ;
     }
     return LevelPart;
 }
@@ -402,7 +422,7 @@ function initializeGame() {
     for (var i = 0; i < LevelPart.length; i++) {
         LevelPart[i] = generateLevelPart();
         LevelPart[i].partPosition = [0, 0, -3 * laneWidth * i];
-        if (i < 5) {
+        if (i < 3) {
             LevelPart[i].gameObject = [];
         }
         LevelPart[i].moveComponents();
@@ -795,7 +815,7 @@ function drawScene() {
     // ratio and we only want to see objects between 0.1 units
     // and 100 units away from the camera.
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 200.0, pMatrix);
-    setCameraPosition(pMatrix, Cube.Position[0] / 2, Cube.Position[1] / 2 + 3, Cube.Position[2] + 10, 10, 0);
+    setCameraPosition(pMatrix, Cube.Position[0] / 2, Cube.Position[1] / 2 + 5, Cube.Position[2] + 10, 10, 0);
 
     setUpShaderAndLight();
 
@@ -829,9 +849,10 @@ function moveObjects(elapsed) {
         LevelPart.push(generateLevelPart());
         LevelPart[LevelPart.length - 1].partPosition[2] = LevelPart[LevelPart.length - 2].partPosition[2] - 3 * laneWidth;
         LevelPart[LevelPart.length - 1].moveComponents();
-        console.log(LevelPart[1].partPosition);
-        console.log(LevelPart[1].Ground.Position);
-        console.log(LevelPart[1].Ground.RelativePosition);
+        console.log("Pos0: " + LevelPart[0].gameObject[0].Position);
+        console.log("Rel0: " + LevelPart[0].gameObject[0].RelativePosition);
+        console.log("Pos1: " + LevelPart[1].gameObject[0].Position);
+        console.log("Rel1: " + LevelPart[1].gameObject[0].RelativePosition);
     }
 }
 

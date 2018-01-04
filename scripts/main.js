@@ -2,91 +2,6 @@
 var canvas;
 var gl;
 
-// shading programs
-var shaderProgram;
-
-class GameObject {
-
-    constructor() {
-        this.VertexpartPositionBuffer = null;
-        this.VertexNormalBuffer = null;
-        this.VertexTextureCoordBuffer = null;
-        this.VertexIndexBuffer = null;
-        this.Texture = null;
-        this.Position = [0, 0, 0];
-        this.RelativePosition = [0, 0, 0];
-        this.Rotation = [0, 0, 0];
-        this.Speed = [0, 0, 0];
-        this.RotationSpeed = [0, 0, 0];
-    }
-
-    clone() {
-        var tmp = new GameObject();
-        tmp.VertexPositionBuffer = this.VertexPositionBuffer;
-        tmp.VertexNormalBuffer = this.VertexNormalBuffer;
-        tmp.VertexTextureCoordBuffer = this.VertexTextureCoordBuffer;
-        tmp.VertexIndexBuffer = this.VertexIndexBuffer;
-        tmp.Texture = this.Texture;
-        tmp.Position = [0, 0, 0]
-        tmp.Position[0] = this.Position[0];
-        tmp.Position[1] = this.Position[1];
-        tmp.Position[2] = this.Position[2];
-        tmp.RelativePosition = [0, 0, 0]
-        tmp.RelativePosition[0] = this.RelativePosition[0];
-        tmp.RelativePosition[1] = this.RelativePosition[1];
-        tmp.RelativePosition[2] = this.RelativePosition[2];
-        tmp.Rotation = [0, 0, 0]
-        tmp.Rotation[0] = this.Rotation[0];
-        tmp.Rotation[1] = this.Rotation[1];
-        tmp.Rotation[2] = this.Rotation[2];
-        tmp.Speed = [0, 0, 0]
-        tmp.Speed[0] = this.Speed[0];
-        tmp.Speed[1] = this.Speed[1];
-        tmp.Speed[2] = this.RelativePosition[2];
-        tmp.RotationSpeed = [0, 0, 0]
-        tmp.RotationSpeed[0] = this.RotationSpeed[0];
-        tmp.RotationSpeed[1] = this.RotationSpeed[1];
-        tmp.RotationSpeed[2] = this.RotationSpeed[2];
-        return tmp;
-    }
-}
-
-class LevelPiece {
-    constructor() {
-        this.partPosition = [0, 0, 0];
-        this.Ground = new GameObject();
-        this.gameObject = [];
-    }
-
-    moveComponents() {
-        this.Ground.Position = [0, 0, 0];
-        this.Ground.Position[0] = this.partPosition[0] + this.Ground.RelativePosition[0];
-        this.Ground.Position[1] = this.partPosition[1] + this.Ground.RelativePosition[1];
-        this.Ground.Position[2] = this.partPosition[2] + this.Ground.RelativePosition[2];
-        for (var i = 0; i < this.gameObject.length; i++) {
-            this.gameObject[i].Position = [0, 0, 0];
-            this.gameObject[i].Position[0] = this.partPosition[0] + this.gameObject[i].RelativePosition[0];
-            this.gameObject[i].Position[1] = this.partPosition[1] + this.gameObject[i].RelativePosition[1];
-            this.gameObject[i].Position[2] = this.partPosition[2] + this.gameObject[i].RelativePosition[2];
-        }
-    }
-
-    clone() {
-        var tmp = new LevelPiece();
-        tmp.partPosition = this.partPosition;
-        tmp.Ground = this.Ground.clone();
-        for (var i = 0; i < this.gameObject.length; i++) {
-            tmp.gameObject.push(this.gameObject[i].clone());
-        }
-    }
-}
-
-var Cube = new GameObject();
-var GroundPlane = new GameObject();
-var Obstacle = new GameObject();
-var LevelPart = new Array(20);
-var StartTime;
-
 
 // arrays for object buffers
 var CubeVertices = [
@@ -356,6 +271,230 @@ var GroundPlaneVertexIndices = [
 ];
 
 
+// shading programs
+var shaderProgram;
+
+class GameObject {
+    constructor() {
+        this.VertexPositionBuffer = null;
+        this.VertexNormalBuffer = null;
+        this.VertexTextureCoordBuffer = null;
+        this.VertexIndexBuffer = null;
+        this.Texture = null;
+        this.Position = [0, 0, 0];
+        this.RelativePosition = [0, 0, 0];
+        this.Rotation = [0, 0, 0];
+        this.Speed = [0, 0, 0];
+        this.RotationSpeed = [0, 0, 0];
+        this.Size = [0, 0, 0];
+    }
+
+    clone() {
+        var tmp = new GameObject();
+        tmp.VertexPositionBuffer = this.VertexPositionBuffer;
+        tmp.VertexNormalBuffer = this.VertexNormalBuffer;
+        tmp.VertexTextureCoordBuffer = this.VertexTextureCoordBuffer;
+        tmp.VertexIndexBuffer = this.VertexIndexBuffer;
+        tmp.Texture = this.Texture;
+        tmp.Position = [0, 0, 0]
+        tmp.Position[0] = this.Position[0];
+        tmp.Position[1] = this.Position[1];
+        tmp.Position[2] = this.Position[2];
+        tmp.RelativePosition = [0, 0, 0]
+        tmp.RelativePosition[0] = this.RelativePosition[0];
+        tmp.RelativePosition[1] = this.RelativePosition[1];
+        tmp.RelativePosition[2] = this.RelativePosition[2];
+        tmp.Rotation = [0, 0, 0]
+        tmp.Rotation[0] = this.Rotation[0];
+        tmp.Rotation[1] = this.Rotation[1];
+        tmp.Rotation[2] = this.Rotation[2];
+        tmp.Speed = [0, 0, 0]
+        tmp.Speed[0] = this.Speed[0];
+        tmp.Speed[1] = this.Speed[1];
+        tmp.Speed[2] = this.RelativePosition[2];
+        tmp.RotationSpeed = [0, 0, 0]
+        tmp.RotationSpeed[0] = this.RotationSpeed[0];
+        tmp.RotationSpeed[1] = this.RotationSpeed[1];
+        tmp.RotationSpeed[2] = this.RotationSpeed[2];
+        tmp.Size = [0, 0, 0]
+        tmp.Size[0] = this.Size[0];
+        tmp.Size[1] = this.Size[1];
+        tmp.Size[2] = this.Size[2];
+
+        return tmp;
+    }
+
+    isOnObject(gameObject) {
+
+        if (gameObject == null) {
+            //console.log("game object null");
+            return false;
+        }
+        if (this.isAbove(gameObject)) {
+            //console.log("above object");
+            if ((gameObject.Position[1] + (gameObject.Size[1] / 2)) >= (this.Position[1] - (this.Size[1] / 2))) {
+                //console.log("on object");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    hitObjectInFront(gameObject) {
+
+        if (gameObject == null) {
+            console.log("game object null");
+            return false;
+        }
+        if (this.isBehind(gameObject)) {
+            //console.log("above object");
+            if ((gameObject.Position[2] + (gameObject.Size[2] / 2)) >= (this.Position[2] - (this.Size[2] / 2))) {
+                //console.log("on object");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getObjectUnder() {
+        var highest = -1024;
+        var objectUnder = null;
+        for (var i = 0; i < LevelPart.length / 2; i++) {
+            //console.log(LevelPart[i].Ground.Size);
+            if (this.isAbove(LevelPart[i].Ground)) {
+                objectUnder = LevelPart[i].Ground;
+                //console.log(objectUnder);
+                highest = LevelPart[i].Ground.Position[1];
+                for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
+                    if (this.isAbove(LevelPart[i].gameObject[j]) && LevelPart[i].gameObject[j].Position[1] > highest) {
+                        objectUnder = LevelPart[i].gameObject[j];
+                        highest = LevelPart[i].gameObject[j].Position[1];
+                    }
+                }
+            }
+
+        }
+        return objectUnder;
+    }
+
+    getObjectInFront() {
+        var highest = -1024;
+        var objectUnder = null;
+        for (var i = 0; i < LevelPart.length / 2; i++) {
+            for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
+                //console.log(LevelPart[i].gameObject[j]);
+                if (this.isBehind(LevelPart[i].gameObject[j]) && LevelPart[i].gameObject[j].Position[2] > highest) {
+                    objectUnder = LevelPart[i].gameObject[j];
+                    highest = LevelPart[i].gameObject[j].Position[2];
+                    //console.log(LevelPart[i].gameObject[j]);
+                }
+            }
+        }
+        return objectUnder;
+    }
+
+    isAbove(gameObject) {
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.5;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        //console.log(gameObject.Size);
+        //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
+        //console.log("Z: " + posZmax, posZmin, objZmax, objZmin);
+        var above = false;
+        if (posYmin > gameObject.Position[1]) {
+            //console.log("higher");
+            if (((objXmin <= posXmax && posXmax <= objXmax) || (objXmin <= posXmin && posXmin <= objXmax)) || ((posXmin <= objXmax && objXmax <= posXmax) || (posXmin <= objXmin && objXmin <= posXmax))) {
+                //console.log("x right");
+                if (((objZmin <= posZmax && posZmax <= objZmax) || (objZmin <= posZmin && posZmin <= objZmax)) || ((posZmin <= objZmax && objZmax <= posZmax) || (posZmin <= objZmin && objZmin <= posZmax))) {
+                    //console.log("y right");
+                    above = true;
+                }
+            }
+        }
+        return above;
+    }
+
+    isBehind(gameObject) {
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        //console.log(gameObject.Size);
+        //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
+        //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
+        //console.log("testing");
+        var above = false;
+        if (posZmin >= gameObject.Position[2]) {
+            //console.log("higher");
+            if (((objXmin <= posXmax && posXmax <= objXmax) || (objXmin <= posXmin && posXmin <= objXmax)) || ((posXmin <= objXmax && objXmax <= posXmax) || (posXmin <= objXmin && objXmin <= posXmax))) {
+                //console.log("x right");
+                if (((objYmin <= posYmax && posYmax <= objYmax) || (objYmin <= posYmin && posYmin <= objYmax)) || ((posYmin <= objYmax && objYmax <= posYmax) || (posYmin <= objYmin && objYmin <= posYmax))) {
+                    //console.log("y right");
+                    above = true;
+                }
+            }
+        }
+        return above;
+    }
+}
+
+class LevelPiece {
+    constructor() {
+        this.partPosition = [0, 0, 0];
+        this.Ground = new GameObject();
+        this.gameObject = [];
+    }
+
+    moveComponents() {
+        this.Ground.Position = [0, 0, 0];
+        this.Ground.Position[0] = this.partPosition[0] + this.Ground.RelativePosition[0];
+        this.Ground.Position[1] = this.partPosition[1] + this.Ground.RelativePosition[1];
+        this.Ground.Position[2] = this.partPosition[2] + this.Ground.RelativePosition[2];
+        for (var i = 0; i < this.gameObject.length; i++) {
+            this.gameObject[i].Position = [0, 0, 0];
+            this.gameObject[i].Position[0] = this.partPosition[0] + this.gameObject[i].RelativePosition[0];
+            this.gameObject[i].Position[1] = this.partPosition[1] + this.gameObject[i].RelativePosition[1];
+            this.gameObject[i].Position[2] = this.partPosition[2] + this.gameObject[i].RelativePosition[2];
+        }
+    }
+
+    clone() {
+        var tmp = new LevelPiece();
+        tmp.partPosition = this.partPosition;
+        tmp.Ground = this.Ground.clone();
+        for (var i = 0; i < this.gameObject.length; i++) {
+            tmp.gameObject.push(this.gameObject[i].clone());
+        }
+    }
+}
+
+
+var Cube = new GameObject();
+Cube.Size = getObjectSize(CubeVertices);
+var GroundPlane = new GameObject();
+GroundPlane.Size = getObjectSize(GroundPlaneVertices);
+console.log("GroundPlane size: " + GroundPlane.Size);
+var Obstacle = new GameObject();
+Obstacle.Size = getObjectSize(ObstacleVertices);
+console.log("obstacle size: " + Obstacle.Size);
+var LevelPart = new Array(20);
+var StartTime;
+
+
 // Model-View and Projection matrices
 var mvMatrixStack = [];
 var mvMatrix = mat4.create();
@@ -375,14 +514,45 @@ var currentlyPressedKeys = {};
 var clickedKeys = {};
 
 // Variables for storing game mechanics data
+var inGame = true;
 var startingTravelSpeed = 7;
 var speedupFactor = 5;
 var score = 0;
 var jump = false;
-var onGround = true;
 var CubeLane = 0;
 var laneWidth = 4;
+var maxSpeed = 20;
 
+
+function getObjectSize(vertices) {
+    var minX = 0;
+    var minY = 0;
+    var minZ = 0;
+    var maxX = 0;
+    var maxY = 0;
+    var maxZ = 0;
+    for (var i = 0; i < vertices.length / 3; i++) {
+        var iX = 3 * i;
+        var iY = 3 * i + 1;
+        var iZ = 3 * i + 2;
+        if (vertices[iX] > maxX) {
+            maxX = vertices[iX];
+        } else if (vertices[iX] < minX) {
+            minX = vertices[iX];
+        }
+        if (vertices[iY] > maxY) {
+            maxY = vertices[iY];
+        } else if (vertices[iY] < minY) {
+            minY = vertices[iY];
+        }
+        if (vertices[iZ] > maxZ) {
+            maxZ = vertices[iZ];
+        } else if (vertices[iZ] < minZ) {
+            minZ = vertices[iZ];
+        }
+    }
+    return [maxX - minX, maxY - minY, maxZ - minZ];
+}
 
 //
 // Matrix utility functions
@@ -401,7 +571,7 @@ function generateLevelPart() {
         LevelPart.gameObject.Position = [0, 0, 0];
         LevelPart.gameObject.RelativePosition = [0, 0, 0];
         var posX = (Math.random() * 2 - 1) * laneWidth;
-        var posY = Math.round(Math.random()*0.6) * laneWidth*3/4 + 1;
+        var posY = Math.round(Math.random() * 0.6) * laneWidth * 3 / 4 + 1;
         var posZ = (Math.random() * 2 - 1) * laneWidth;
         LevelPart.gameObject[i].RelativePosition[0] = posX;
         LevelPart.gameObject[i].RelativePosition[1] = posY;
@@ -412,11 +582,10 @@ function generateLevelPart() {
 
 function initializeGame() {
     // Variables for storing current Position of Cube
-    Cube.Position = [0.0, 1, -7.0];
+    Cube.Position = [0.0, 10, -7.0];
     Cube.Rotation = [0.0, 0.0, 0.0];
-    Cube.Speed = [0.0, 0.0, 0];
+    Cube.Speed = [0.0, 0.0, 0.0];
     Cube.RotationSpeed = [0.0, 0.0, 0.0];
-    CubeLane = 0;
 
     //Variables for storing world data
     for (var i = 0; i < LevelPart.length; i++) {
@@ -534,7 +703,8 @@ function getShader(gl, id) {
 //
 function initShaders() {
     var fragmentShader = getShader(gl, "per-fragment-lighting-fs");
-    var vertexShader = getShader(gl, "per-fragment-lighting-vs");
+    var vertexShader = getShader(gl, "per-vertex-lighting-vs");
+
 
     // Create the shader program
     shaderProgram = gl.createProgram();
@@ -783,9 +953,9 @@ function setUpShaderAndLight() {
 
     gl.uniform3f(
         shaderProgram.pointLightingLocationUniform,
-        parseFloat(document.getElementById("lightPositionX").value),
-        parseFloat(document.getElementById("lightPositionY").value),
-        parseFloat(document.getElementById("lightPositionZ").value)
+        Cube.Position[0],
+        Cube.Position[1] + 1.5,
+        Cube.Position[2] - 1.5
     );
 
     gl.uniform3f(
@@ -849,17 +1019,11 @@ function moveObjects(elapsed) {
         LevelPart.push(generateLevelPart());
         LevelPart[LevelPart.length - 1].partPosition[2] = LevelPart[LevelPart.length - 2].partPosition[2] - 3 * laneWidth;
         LevelPart[LevelPart.length - 1].moveComponents();
-        console.log("Pos0: " + LevelPart[0].gameObject[0].Position);
-        console.log("Rel0: " + LevelPart[0].gameObject[0].RelativePosition);
-        console.log("Pos1: " + LevelPart[1].gameObject[0].Position);
-        console.log("Rel1: " + LevelPart[1].gameObject[0].RelativePosition);
     }
 }
 
 function animate() {
     var timeNow = new Date().getTime();
-    var sideAcc = 150;
-    var maxSpeed = 15;
     if (lastTime !== 0) {
         var elapsed = timeNow - lastTime;
         // console.log(CubeLane);
@@ -871,52 +1035,34 @@ function animate() {
         //console.log(Cube.Speed[0]);
 
 
-        if (Math.abs(distance) < 0.05) {
-            Cube.Speed[0] = 0;
-            //console.log("not moving");
-        } else {
-            if (Math.abs(distance) < Math.abs((Cube.Speed[0] / 2) * (Cube.Speed[0] / sideAcc))) {
-                //console.log("if looks good");
-                if (distance < 0)
-                    Cube.Speed[0] += sideAcc * elapsed / 1000;
-                else
-                    Cube.Speed[0] -= sideAcc * elapsed / 1000;
-            } else {
-                //console.log("if doesn't look good");
-                if (distance > 0)
-                    Cube.Speed[0] += sideAcc * elapsed / 1000;
-                else
-                    Cube.Speed[0] -= sideAcc * elapsed / 1000;
-            }
-            if (Cube.Speed[0] > maxSpeed)
-                Cube.Speed[0] = maxSpeed;
-            if (Cube.Speed[0] < -maxSpeed)
-                Cube.Speed[0] = -maxSpeed;
-
+        //console.log(Cube.getObjectInFront());
+        if (Cube.hitObjectInFront(Cube.getObjectInFront())) {
+            console.log("hit object in front");
+            inGame = false;
         }
 
-
-        // rotate pyramid and Cube for a small amount
-        if (jump && onGround) {
+        if (jump && Cube.isOnObject(Cube.getObjectUnder())) {
             Cube.Speed[1] = 20;
-            onGround = false;
             jump = false;
+            //console.log("starting jump");
         }
-        if (!onGround) {
+
+
+        if (!Cube.isOnObject(Cube.getObjectUnder())) {
             Cube.Speed[1] -= 60 * elapsed / 1000;
-            Cube.RotationSpeed[0] = -560;
+            Cube.RotationSpeed[0] = -540;
+            //console.log("gravity");
         }
 
         moveObjects(elapsed);
 
-        if (!(Cube.Position[1] <= 1 && !onGround)) {
-        } else {
-            Cube.Position[1] = 1;
+        if (Cube.isOnObject(Cube.getObjectUnder())) {
+            //console.log("placed on ground");
+            Cube.Position[1] = Cube.getObjectUnder().Position[1] + Cube.getObjectUnder().Size[1] / 2 + Cube.Size[1] / 2;
             Cube.Speed[1] = 0;
             Cube.RotationSpeed[0] = 0;
             Cube.Rotation[0] = Math.round((Cube.Rotation[0] / 90)) * 90;
-            onGround = true;
-            jump = false
+            jump = false;
         }
 
 
@@ -930,9 +1076,13 @@ function animate() {
 // handleKeyDown    ... called on keyDown event
 // handleKeyUp      ... called on keyUp event
 //
+
+function handleKeyDown(event) {
+    currentlyPressedKeys[event.keyCode] = true;
+}
+
 function handleKeyPress(event) {
     // storing the pressed state for individual key
-    currentlyPressedKeys[event.keyCode] = true;
     clickedKeys[event.keyCode] = true;
     //console.log("key pressed");
 
@@ -946,22 +1096,30 @@ function handleKeyUp(event) {
 
 function handleKeys() {
 
-    if (clickedKeys[37]) {
+    if (currentlyPressedKeys[37]) {
         // Left cursor key
-        if (CubeLane > -1)
-            CubeLane--;
-        clickedKeys[37] = false;
-    } else if (clickedKeys[39]) {
+        if (Cube.Speed[0] > -maxSpeed) {
+            Cube.Speed[0] -= 1;
+        }
+    } else if (currentlyPressedKeys[39]) {
         // Right cursor key
-        if (CubeLane < 1)
-            CubeLane++;
-        clickedKeys[39] = false;
+        if (Cube.Speed[0] < maxSpeed) {
+            Cube.Speed[0] += 1;
+        }
+    } else {
+        if (Cube.Speed[0] > 0.5) {
+            Cube.Speed[0] -= 0.9;
+        } else if (Cube.Speed[0] < -0.5) {
+            Cube.Speed[0] += 0.9
+        } else {
+            Cube.Speed[0] = 0;
+        }
     }
-    if (clickedKeys[38]) {
+    if (currentlyPressedKeys[38]) {
         // Up cursor key
-        console.log("up pressed");
+        //console.log("up pressed");
         jump = true;
-        clickedKeys[38] = false;
+
     }
 }
 
@@ -995,19 +1153,20 @@ function start() {
 
         // Bind keyboard handling functions to document handlers
         document.onkeypress = handleKeyPress;
+        document.onkeydown = handleKeyDown;
         document.onkeyup = handleKeyUp;
 
         initializeGame();
         StartTime = new Date().getTime();
         // Set up to draw the scene periodically every 15ms.
         setInterval(function () {
-            if (texturesLoaded === numberOfTextures) {
+            if (texturesLoaded === numberOfTextures && inGame) {
                 requestAnimationFrame(animate);
                 handleKeys();
                 drawScene();
                 var currTime = new Date().getTime();
                 score = Math.round((currTime - StartTime) * startingTravelSpeed / 100) / 10;
-                document.getElementById("score").innerHTML = "Score: " + score.toString();
+                document.getElementById("score").innerHTML = "Score: " + score.toString();// +  "<br/>" +"Speed: " + (startingTravelSpeed + speedupFactor * score / 1000 ) + "<br/>" + "CubePosition: " + Cube.Position + "<br/>" + "TilePosition: " + LevelPart[1].partPosition ;
             }
         }, 15);
 

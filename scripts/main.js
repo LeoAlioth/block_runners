@@ -710,7 +710,7 @@ function generateLevelPart() {
 
 function initializeGame() {
     // Variables for storing current Position of Cube
-    Cube.Position = [0.0, 10, -7.0];
+    Cube.Position = [0.0, 1, -7.0];
     Cube.Rotation = [0.0, 0.0, 0.0];
     Cube.Speed = [0.0, 0.0, 0.0];
     Cube.RotationSpeed = [0.0, 0.0, 0.0];
@@ -1180,11 +1180,11 @@ function animate() {
             //console.log("starting jump");
         }
 
-        if(Cube.hitObjectOnLeft(objectLeft)){
+        if (Cube.hitObjectOnLeft(objectLeft)) {
             Cube.Speed[0] = 0;
             Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2;
         }
-        if(Cube.hitObjectOnRight(objectRight)){
+        if (Cube.hitObjectOnRight(objectRight)) {
             Cube.Speed[0] = 0;
             Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2;
         }

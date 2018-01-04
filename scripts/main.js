@@ -324,7 +324,7 @@ class GameObject {
         return tmp;
     }
 
-    isOnObject(gameObject) {
+    hitObjectUnder(gameObject) {
 
         if (gameObject == null) {
             //console.log("game object null");
@@ -333,22 +333,6 @@ class GameObject {
         if (this.isAbove(gameObject)) {
             //console.log("above object");
             if ((gameObject.Position[1] + (gameObject.Size[1] / 2)) >= (this.Position[1] - (this.Size[1] / 2))) {
-                //console.log("on object");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    hitObjectInFront(gameObject) {
-
-        if (gameObject == null) {
-            console.log("game object null");
-            return false;
-        }
-        if (this.isBehind(gameObject)) {
-            //console.log("above object");
-            if ((gameObject.Position[2] + (gameObject.Size[2] / 2)) >= (this.Position[2] - (this.Size[2] / 2))) {
                 //console.log("on object");
                 return true;
             }
@@ -373,22 +357,6 @@ class GameObject {
                 }
             }
 
-        }
-        return objectUnder;
-    }
-
-    getObjectInFront() {
-        var highest = -1024;
-        var objectUnder = null;
-        for (var i = 0; i < LevelPart.length / 2; i++) {
-            for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
-                //console.log(LevelPart[i].gameObject[j]);
-                if (this.isBehind(LevelPart[i].gameObject[j]) && LevelPart[i].gameObject[j].Position[2] > highest) {
-                    objectUnder = LevelPart[i].gameObject[j];
-                    highest = LevelPart[i].gameObject[j].Position[2];
-                    //console.log(LevelPart[i].gameObject[j]);
-                }
-            }
         }
         return objectUnder;
     }
@@ -420,6 +388,38 @@ class GameObject {
         return above;
     }
 
+    hitObjectInFront(gameObject) {
+
+        if (gameObject == null) {
+            //console.log("game object null");
+            return false;
+        }
+        if (this.isBehind(gameObject)) {
+            //console.log("above object");
+            if ((gameObject.Position[2] + (gameObject.Size[2] / 2)) >= (this.Position[2] - (this.Size[2] / 2))) {
+                //console.log("on object");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getObjectInFront() {
+        var highest = -1024;
+        var objectUnder = null;
+        for (var i = 0; i < LevelPart.length / 2; i++) {
+            for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
+                //console.log(LevelPart[i].gameObject[j]);
+                if (this.isBehind(LevelPart[i].gameObject[j]) && LevelPart[i].gameObject[j].Position[2] > highest) {
+                    objectUnder = LevelPart[i].gameObject[j];
+                    highest = LevelPart[i].gameObject[j].Position[2];
+                    //console.log(LevelPart[i].gameObject[j]);
+                }
+            }
+        }
+        return objectUnder;
+    }
+
     isBehind(gameObject) {
         var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
         var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
@@ -441,6 +441,130 @@ class GameObject {
         if (posZmin >= gameObject.Position[2]) {
             //console.log("higher");
             if (((objXmin <= posXmax && posXmax <= objXmax) || (objXmin <= posXmin && posXmin <= objXmax)) || ((posXmin <= objXmax && objXmax <= posXmax) || (posXmin <= objXmin && objXmin <= posXmax))) {
+                //console.log("x right");
+                if (((objYmin <= posYmax && posYmax <= objYmax) || (objYmin <= posYmin && posYmin <= objYmax)) || ((posYmin <= objYmax && objYmax <= posYmax) || (posYmin <= objYmin && objYmin <= posYmax))) {
+                    //console.log("y right");
+                    above = true;
+                }
+            }
+        }
+        return above;
+    }
+
+    hitObjectOnLeft(gameObject) {
+        if (gameObject == null) {
+            //console.log("game object null");
+            return false;
+        }
+        if (this.isRightFrom(gameObject)) {
+            //console.log("above object");
+            if ((gameObject.Position[0] + (gameObject.Size[0] / 2)) >= (this.Position[0] - (this.Size[0] / 2))) {
+                //console.log("on object");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getObjectOnLeft() {
+        var highest = -1024;
+        var objectUnder = null;
+        for (var i = 0; i < LevelPart.length / 2; i++) {
+            for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
+                //console.log(LevelPart[i].gameObject[j]);
+                if (this.isRightFrom(LevelPart[i].gameObject[j]) && LevelPart[i].gameObject[j].Position[0] > highest) {
+                    objectUnder = LevelPart[i].gameObject[j];
+                    highest = LevelPart[i].gameObject[j].Position[0];
+                    //console.log(LevelPart[i].gameObject[j]);
+                }
+            }
+        }
+        return objectUnder;
+    }
+
+    isRightFrom(gameObject) {
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        //console.log(gameObject.Size);
+        //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
+        //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
+        //console.log("testing");
+        var above = false;
+        if (posXmin >= gameObject.Position[0]) {
+            //console.log("higher");
+            if (((objZmin <= posZmax && posZmax <= objZmax) || (objZmin <= posZmin && posZmin <= objZmax)) || ((posZmin <= objZmax && objZmax <= posZmax) || (posZmin <= objZmin && objZmin <= posZmax))) {
+                //console.log("x right");
+                if (((objYmin <= posYmax && posYmax <= objYmax) || (objYmin <= posYmin && posYmin <= objYmax)) || ((posYmin <= objYmax && objYmax <= posYmax) || (posYmin <= objYmin && objYmin <= posYmax))) {
+                    //console.log("y right");
+                    above = true;
+                }
+            }
+        }
+        return above;
+    }
+
+    hitObjectOnRight(gameObject) {
+        if (gameObject == null) {
+            //console.log("game object null");
+            return false;
+        }
+        if (this.isLeftFrom(gameObject)) {
+            //console.log("above object");
+            if ((gameObject.Position[0] - (gameObject.Size[0] / 2)) <= (this.Position[0] + (this.Size[0] / 2))) {
+                //console.log("on object");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getObjectOnRight() {
+        var highest = 1024;
+        var objectUnder = null;
+        for (var i = 0; i < LevelPart.length / 2; i++) {
+            for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
+                //console.log(LevelPart[i].gameObject[j]);
+                if (this.isLeftFrom(LevelPart[i].gameObject[j]) && LevelPart[i].gameObject[j].Position[0] < highest) {
+                    objectUnder = LevelPart[i].gameObject[j];
+                    highest = LevelPart[i].gameObject[j].Position[0];
+                    //console.log(LevelPart[i].gameObject[j]);
+                }
+            }
+        }
+        return objectUnder;
+    }
+
+    isLeftFrom(gameObject) {
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        //console.log(gameObject.Size);
+        //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
+        //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
+        //console.log("testing");
+        var above = false;
+        if (posXmin <= gameObject.Position[0]) {
+            //console.log("higher");
+            if (((objZmin <= posZmax && posZmax <= objZmax) || (objZmin <= posZmin && posZmin <= objZmax)) || ((posZmin <= objZmax && objZmax <= posZmax) || (posZmin <= objZmin && objZmin <= posZmax))) {
                 //console.log("x right");
                 if (((objYmin <= posYmax && posYmax <= objYmax) || (objYmin <= posYmin && posYmin <= objYmax)) || ((posYmin <= objYmax && objYmax <= posYmax) || (posYmin <= objYmin && objYmin <= posYmax))) {
                     //console.log("y right");
@@ -522,6 +646,10 @@ var jump = false;
 var CubeLane = 0;
 var laneWidth = 4;
 var maxSpeed = 20;
+var objectLeft;
+var objectRight;
+var objectFront;
+var objectBottom;
 
 
 function getObjectSize(vertices) {
@@ -1036,19 +1164,33 @@ function animate() {
 
 
         //console.log(Cube.getObjectInFront());
-        if (Cube.hitObjectInFront(Cube.getObjectInFront())) {
+        objectFront = Cube.getObjectInFront();
+        objectBottom = Cube.getObjectUnder();
+        objectLeft = Cube.getObjectOnLeft();
+        objectRight = Cube.getObjectOnRight();
+
+        if (Cube.hitObjectInFront(objectFront)) {
             console.log("hit object in front");
             inGame = false;
         }
 
-        if (jump && Cube.isOnObject(Cube.getObjectUnder())) {
+        if (jump && Cube.hitObjectUnder(objectBottom)) {
             Cube.Speed[1] = 20;
             jump = false;
             //console.log("starting jump");
         }
 
+        if(Cube.hitObjectOnLeft(objectLeft)){
+            Cube.Speed[0] = 0;
+            Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2;
+        }
+        if(Cube.hitObjectOnRight(objectRight)){
+            Cube.Speed[0] = 0;
+            Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2;
+        }
 
-        if (!Cube.isOnObject(Cube.getObjectUnder())) {
+
+        if (!Cube.hitObjectUnder(objectBottom)) {
             Cube.Speed[1] -= 60 * elapsed / 1000;
             Cube.RotationSpeed[0] = -540;
             //console.log("gravity");
@@ -1056,9 +1198,9 @@ function animate() {
 
         moveObjects(elapsed);
 
-        if (Cube.isOnObject(Cube.getObjectUnder())) {
+        if (Cube.hitObjectUnder(objectBottom)) {
             //console.log("placed on ground");
-            Cube.Position[1] = Cube.getObjectUnder().Position[1] + Cube.getObjectUnder().Size[1] / 2 + Cube.Size[1] / 2;
+            Cube.Position[1] = objectBottom.Position[1] + objectBottom.Size[1] / 2 + Cube.Size[1] / 2;
             Cube.Speed[1] = 0;
             Cube.RotationSpeed[0] = 0;
             Cube.Rotation[0] = Math.round((Cube.Rotation[0] / 90)) * 90;

@@ -1182,11 +1182,11 @@ function animate() {
 
         if (Cube.hitObjectOnLeft(objectLeft)) {
             Cube.Speed[0] = 0;
-            Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2;
+            Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2 + 0.001;
         }
         if (Cube.hitObjectOnRight(objectRight)) {
             Cube.Speed[0] = 0;
-            Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2;
+            Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2 - 0.001;
         }
 
 

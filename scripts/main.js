@@ -389,7 +389,6 @@ var GroundPlaneVertexIndices = [
     2, 1, 0, 3, 2, 0    // MAIN PLANE
 ];
 
-
 // shading programs
 var shaderProgram;
 

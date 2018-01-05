@@ -853,7 +853,7 @@ function generateLevelPart() {
         LevelPart.gameObject[objectI].RelativePosition[1] = posY;
         LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
     }
-    if (Math.random() > 0.7) {
+    if (Math.random() > 095) {
         LevelPart.gameObject.push(HealthCube.clone());
         objectI = LevelPart.gameObject.length - 1;
         LevelPart.gameObject[objectI].Position = [0, 0, 0];
@@ -866,7 +866,7 @@ function generateLevelPart() {
         LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
 
     }
-    if (Math.random() > 0.7) {
+    if (Math.random() > 0.9) {
         LevelPart.gameObject.push(LightsOffCube.clone());
         var objectI = LevelPart.gameObject.length - 1;
         LevelPart.gameObject[objectI].Position = [0, 0, 0];

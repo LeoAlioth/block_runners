@@ -416,27 +416,27 @@ class GameObject {
         tmp.VertexTextureCoordBuffer = this.VertexTextureCoordBuffer;
         tmp.VertexIndexBuffer = this.VertexIndexBuffer;
         tmp.Texture = this.Texture;
-        tmp.Position = [0, 0, 0]
+        tmp.Position = [0, 0, 0];
         tmp.Position[0] = this.Position[0];
         tmp.Position[1] = this.Position[1];
         tmp.Position[2] = this.Position[2];
-        tmp.RelativePosition = [0, 0, 0]
+        tmp.RelativePosition = [0, 0, 0];
         tmp.RelativePosition[0] = this.RelativePosition[0];
         tmp.RelativePosition[1] = this.RelativePosition[1];
         tmp.RelativePosition[2] = this.RelativePosition[2];
-        tmp.Rotation = [0, 0, 0]
+        tmp.Rotation = [0, 0, 0];
         tmp.Rotation[0] = this.Rotation[0];
         tmp.Rotation[1] = this.Rotation[1];
         tmp.Rotation[2] = this.Rotation[2];
-        tmp.Speed = [0, 0, 0]
+        tmp.Speed = [0, 0, 0];
         tmp.Speed[0] = this.Speed[0];
         tmp.Speed[1] = this.Speed[1];
         tmp.Speed[2] = this.RelativePosition[2];
-        tmp.RotationSpeed = [0, 0, 0]
+        tmp.RotationSpeed = [0, 0, 0];
         tmp.RotationSpeed[0] = this.RotationSpeed[0];
         tmp.RotationSpeed[1] = this.RotationSpeed[1];
         tmp.RotationSpeed[2] = this.RotationSpeed[2];
-        tmp.Size = [0, 0, 0]
+        tmp.Size = [0, 0, 0];
         tmp.Size[0] = this.Size[0];
         tmp.Size[1] = this.Size[1];
         tmp.Size[2] = this.Size[2];
@@ -547,13 +547,10 @@ class GameObject {
         var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
         var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
         var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
         var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
         var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
         var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
         var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
@@ -607,13 +604,10 @@ class GameObject {
         var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
         var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
         var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
         var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
         var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
         var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
         var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
         var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
         var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
         //console.log(gameObject.Size);
@@ -666,16 +660,13 @@ class GameObject {
     }
 
     isLeftFrom(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
         var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
         var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
         var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
         var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
         var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
         var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
         var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
         var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
         var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
         //console.log(gameObject.Size);
@@ -843,34 +834,34 @@ function generateLevelPart() {
     var LevelPart = new LevelPiece();
     LevelPart.Ground = GroundPlane.clone();
     LevelPart.gameObject.push(SideBarrier.clone());
-    var objectI = LevelPart.gameObject.length - 1;
+    objectI = LevelPart.gameObject.length - 1;
     LevelPart.gameObject[objectI].Position = [0, 0, 0];
     LevelPart.gameObject[objectI].RelativePosition = [-6.2, 0.5, 0];
     LevelPart.gameObject.push(SideBarrier.clone());
-    var objectI = LevelPart.gameObject.length - 1;
+    objectI = LevelPart.gameObject.length - 1;
     LevelPart.gameObject[objectI].Position = [0, 0, 0];
     LevelPart.gameObject[objectI].RelativePosition = [6.2, 0.5, 0];
     for (var i = 0; i <= Math.round(score / 1000); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
-        var objectI = LevelPart.gameObject.length - 1;
+        objectI = LevelPart.gameObject.length - 1;
         LevelPart.gameObject[objectI].Position = [0, 0, 0];
         LevelPart.gameObject[objectI].RelativePosition = [0, 0, 0];
-        var posX = (Math.random() - 0.5) * GroundPlane.Size[0];
-        var posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 2 + 1;
-        var posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
+        posX = (Math.random() - 0.5) * GroundPlane.Size[0];
+        posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 2 + 1;
+        posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
         LevelPart.gameObject[objectI].RelativePosition[0] = posX;
         LevelPart.gameObject[objectI].RelativePosition[1] = posY;
         LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
     }
     if (Math.random() > 0.7) {
         LevelPart.gameObject.push(HealthCube.clone());
-        var objectI = LevelPart.gameObject.length - 1;
+        objectI = LevelPart.gameObject.length - 1;
         LevelPart.gameObject[objectI].Position = [0, 0, 0];
         LevelPart.gameObject[objectI].RelativePosition = [0, 0, 0];
-        var posX = (Math.random() - 0.5) * GroundPlane.Size[0];
-        var posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 3 + 1;
-        var posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
+        posX = (Math.random() - 0.5) * GroundPlane.Size[0];
+        posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 3 + 1;
+        posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
         LevelPart.gameObject[objectI].RelativePosition[0] = posX;
         LevelPart.gameObject[objectI].RelativePosition[1] = posY;
         LevelPart.gameObject[objectI].RelativePosition[2] = posZ;

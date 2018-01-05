@@ -69,3 +69,12 @@ td {
 	font-weight: bold;
 
 }
+#hp{
+	position: absolute;
+	top:95px;
+	left:46%;
+	color:white;
+	font-family: Courier New, Courier, monospace;
+	font-weight: bold;
+
+}

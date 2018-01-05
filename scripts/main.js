@@ -245,6 +245,127 @@ var ObstacleVertexIndices = [
 ];
 
 
+var PowerUpVertices = [
+    // Front face
+    -0.5, -0.5, 0.5,
+    0.5, -0.5, 0.5,
+    0.5, 0.5, 0.5,
+    -0.5, 0.5, 0.5,
+
+    // Back face
+    -0.5, -0.5, -0.5,
+    -0.5, 0.5, -0.5,
+    0.5, 0.5, -0.5,
+    0.5, -0.5, -0.5,
+
+    // Top face
+    -0.5, 0.5, -0.5,
+    -0.5, 0.5, 0.5,
+    0.5, 0.5, 0.5,
+    0.5, 0.5, -0.5,
+
+    // Bottom face
+    -0.5, -0.5, -0.5,
+    0.5, -0.5, -0.5,
+    0.5, -0.5, 0.5,
+    -0.5, -0.5, 0.5,
+
+    // Right face
+    0.5, -0.5, -0.5,
+    0.5, 0.5, -0.5,
+    0.5, 0.5, 0.5,
+    0.5, -0.5, 0.5,
+
+    // Left face
+    -0.5, -0.5, -0.5,
+    -0.5, -0.5, 0.5,
+    -0.5, 0.5, 0.5,
+    -0.5, 0.5, -0.5
+];
+var PowerUpVertexNormals = [
+    // Front face
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+
+    // Back face
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+
+    // Top face
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+
+    // Bottom face
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+
+    // Right face
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+
+    // Left face
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0
+];
+var PowerUpTextureCoords = [
+    // Front face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+
+    // Back face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Top face
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+
+    // Bottom face
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+
+    // Right face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Left face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0
+];
+var PowerUpVertexIndices = [
+    0, 1, 2, 0, 2, 3,    // Front face
+    4, 5, 6, 4, 6, 7,    // Back face
+    8, 9, 10, 8, 10, 11,  // Top face
+    12, 13, 14, 12, 14, 15, // Bottom face
+    16, 17, 18, 16, 18, 19, // Right face
+    20, 21, 22, 20, 22, 23  // Left face
+];
+
+
 var GroundPlaneVertices = [
     // MAIN PLANE
     -6.0, 0.0, -6.0,
@@ -276,6 +397,7 @@ var shaderProgram;
 
 class GameObject {
     constructor() {
+        this.Type = 0; //0 - 4:  solid objects, 5-9 power ups, 10 - 14: penalties
         this.VertexPositionBuffer = null;
         this.VertexNormalBuffer = null;
         this.VertexTextureCoordBuffer = null;
@@ -320,6 +442,7 @@ class GameObject {
         tmp.Size[0] = this.Size[0];
         tmp.Size[1] = this.Size[1];
         tmp.Size[2] = this.Size[2];
+        tmp.Type = this.Type;
 
         return tmp;
     }
@@ -606,16 +729,12 @@ class LevelPiece {
     }
 }
 
-
-var Cube = new GameObject();
-Cube.Size = getObjectSize(CubeVertices);
-var GroundPlane = new GameObject();
-GroundPlane.Size = getObjectSize(GroundPlaneVertices);
-console.log("GroundPlane size: " + GroundPlane.Size);
-var Obstacle = new GameObject();
-Obstacle.Size = getObjectSize(ObstacleVertices);
-console.log("obstacle size: " + Obstacle.Size);
-var LevelPart = new Array(20);
+//variables for different objects in game;
+var Cube;
+var PowerUp;
+var GroundPlane;
+var Obstacle;
+var LevelPart;
 var StartTime;
 
 
@@ -624,13 +743,12 @@ var mvMatrixStack = [];
 var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 
-// Helper variables for storing current Rotation of pyramid and Cube
 // Helper variable for animation
 var lastTime = 0;
 
 
 // Variable that stores  loading state of textures.
-var numberOfTextures = 3;
+var numberOfTextures = 4;
 var texturesLoaded = 0;
 
 // Keyboard handling helper variable for reading the status of keys
@@ -639,18 +757,36 @@ var clickedKeys = {};
 
 // Variables for storing game mechanics data
 var inGame = true;
-var startingTravelSpeed = 7;
-var speedupFactor = 5;
-var score = 0;
-var jump = false;
-var CubeLane = 0;
-var laneWidth = 4;
-var maxSpeed = 20;
+var startingTravelSpeed;
+var speedupFactor;
+var score;
+var jump;
+var maxSpeed;
 var objectLeft;
 var objectRight;
 var objectFront;
 var objectBottom;
+var GameOver;
+var hp;
+var invincible;
 
+function createAllObjects() {
+    Cube = new GameObject();
+    Cube.Size = getObjectSize(CubeVertices);
+    Cube.Type = 0;
+    GroundPlane = new GameObject();
+    GroundPlane.Size = getObjectSize(GroundPlaneVertices);
+    GroundPlane.Type = 1;
+    console.log("GroundPlane size: " + GroundPlane.Size);
+    Obstacle = new GameObject();
+    Obstacle.Size = getObjectSize(ObstacleVertices);
+    Obstacle.Type = 1;
+    PowerUp = new GameObject();
+    PowerUp.Size = getObjectSize(PowerUpVertices);
+    PowerUp.Type = 5;
+    LevelPart = new Array(20);
+
+}
 
 function getObjectSize(vertices) {
     var minX = 0;
@@ -696,14 +832,28 @@ function generateLevelPart() {
     for (var i = 0; i <= Math.round(score / 1000); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
-        LevelPart.gameObject.Position = [0, 0, 0];
-        LevelPart.gameObject.RelativePosition = [0, 0, 0];
-        var posX = (Math.random() * 2 - 1) * laneWidth;
-        var posY = Math.round(Math.random() * 0.6) * laneWidth * 3 / 4 + 1;
-        var posZ = (Math.random() * 2 - 1) * laneWidth;
-        LevelPart.gameObject[i].RelativePosition[0] = posX;
-        LevelPart.gameObject[i].RelativePosition[1] = posY;
-        LevelPart.gameObject[i].RelativePosition[2] = posZ;
+        var objectI = LevelPart.gameObject.length - 1;
+        LevelPart.gameObject[objectI].Position = [0, 0, 0];
+        LevelPart.gameObject[objectI].RelativePosition = [0, 0, 0];
+        var posX = (Math.random() - 0.5) * GroundPlane.Size[0];
+        var posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 2 + 1;
+        var posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
+        LevelPart.gameObject[objectI].RelativePosition[0] = posX;
+        LevelPart.gameObject[objectI].RelativePosition[1] = posY;
+        LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
+    }
+    if(Math.random() > 0.5){
+        LevelPart.gameObject.push(PowerUp.clone());
+        var objectI = LevelPart.gameObject.length - 1;
+        LevelPart.gameObject[objectI].Position = [0, 0, 0];
+        LevelPart.gameObject[objectI].RelativePosition = [0, 0, 0];
+        var posX = (Math.random() - 0.5) * GroundPlane.Size[0];
+        var posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 2 + 1;
+        var posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
+        LevelPart.gameObject[objectI].RelativePosition[0] = posX;
+        LevelPart.gameObject[objectI].RelativePosition[1] = posY;
+        LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
+
     }
     return LevelPart;
 }
@@ -714,16 +864,25 @@ function initializeGame() {
     Cube.Rotation = [0.0, 0.0, 0.0];
     Cube.Speed = [0.0, 0.0, 0.0];
     Cube.RotationSpeed = [0.0, 0.0, 0.0];
-
+    startingTravelSpeed = 7;
+    speedupFactor = 5;
+    score = 0;
+    jump = false;
+    maxSpeed = 20;
+    inGame = true;
+    GameOver = false;
+    hp = 3;
+    invincible = false;
     //Variables for storing world data
     for (var i = 0; i < LevelPart.length; i++) {
         LevelPart[i] = generateLevelPart();
-        LevelPart[i].partPosition = [0, 0, -3 * laneWidth * i];
+        LevelPart[i].partPosition = [0, 0, -GroundPlane.Size[2] * i];
         if (i < 3) {
             LevelPart[i].gameObject = [];
         }
         LevelPart[i].moveComponents();
     }
+    StartTime = new Date().getTime();
 
 }
 
@@ -923,6 +1082,14 @@ function initTextures() {
     };
     Obstacle.Texture.image.src = "./assets/glass.gif";
 
+
+    PowerUp.Texture = gl.createTexture();
+    PowerUp.Texture.image = new Image();
+    PowerUp.Texture.image.onload = function () {
+        handleTextureLoaded(PowerUp.Texture);
+    };
+    PowerUp.Texture.image.src = "./assets/companion_cube.png";
+
     //console.log("initializing GroundPlane");
 
     Cube.Texture = gl.createTexture();
@@ -1009,6 +1176,7 @@ function initBuffers() {
     initGameObjectBuffers(GroundPlane, GroundPlaneVertices, GroundPlaneVertexNormals, GroundPlaneTextureCoords, GroundPlaneVertexIndices);
     initGameObjectBuffers(Cube, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
     initGameObjectBuffers(Obstacle, ObstacleVertices, ObstacleVertexNormals, ObstacleTextureCoords, ObstacleVertexIndices);
+    initGameObjectBuffers(PowerUp, PowerUpVertices, PowerUpVertexNormals, PowerUpTextureCoords, PowerUpVertexIndices);
 }
 
 //
@@ -1142,10 +1310,10 @@ function moveObjects(elapsed) {
         LevelPart[i].partPosition[2] += elapsed * (startingTravelSpeed + speedupFactor * score / 1000) / 1000;
         LevelPart[i].moveComponents();
     }
-    if (LevelPart[0].partPosition[2] > laneWidth * 3) {
+    if (LevelPart[0].partPosition[2] > GroundPlane.Size[2]) {
         LevelPart.shift();
         LevelPart.push(generateLevelPart());
-        LevelPart[LevelPart.length - 1].partPosition[2] = LevelPart[LevelPart.length - 2].partPosition[2] - 3 * laneWidth;
+        LevelPart[LevelPart.length - 1].partPosition[2] = LevelPart[LevelPart.length - 2].partPosition[2] - GroundPlane.Size[2];
         LevelPart[LevelPart.length - 1].moveComponents();
     }
 }
@@ -1154,39 +1322,56 @@ function animate() {
     var timeNow = new Date().getTime();
     if (lastTime !== 0) {
         var elapsed = timeNow - lastTime;
-        // console.log(CubeLane);
-        //console.log(CubeLane*laneWidth);
-        //console.log(Cube.Position[0]);
-        var distance = laneWidth * CubeLane - Cube.Position[0];
-        //console.log(distance);
-        //console.log(Math.abs((Cube.Speed[0]) * (Cube.Speed[0] / sideAcc)));
-        //console.log(Cube.Speed[0]);
 
-
-        //console.log(Cube.getObjectInFront());
         objectFront = Cube.getObjectInFront();
         objectBottom = Cube.getObjectUnder();
         objectLeft = Cube.getObjectOnLeft();
         objectRight = Cube.getObjectOnRight();
 
         if (Cube.hitObjectInFront(objectFront)) {
-            console.log("hit object in front");
-            inGame = false;
+            if(objectFront.Type === 1) {
+                if(!(hp > 0) && ! invincible) {
+                    console.log("hit object in front");
+                    inGame = false;
+                    GameOver = true;
+                } else {
+                    hp--;
+                }
+            }
+            else {
+                handleGameItems(objectFront);
+            }
+
         }
 
         if (jump && Cube.hitObjectUnder(objectBottom)) {
-            Cube.Speed[1] = 20;
-            jump = false;
-            //console.log("starting jump");
+            if(objectBottom.Type === 1) {
+                Cube.Speed[1] = 20;
+                jump = false;
+                //console.log("starting jump");
+            } else {
+                handleGameItems(objectBottom);
+            }
         }
 
         if (Cube.hitObjectOnLeft(objectLeft)) {
-            Cube.Speed[0] = 0;
-            Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2 + 0.001;
+            if(objectLeft.Type === 1) {
+                Cube.Speed[0] = 0;
+                Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2 + 0.001;
+            }
+            else {
+                handleGameItems(objectLeft);
+            }
         }
+
         if (Cube.hitObjectOnRight(objectRight)) {
-            Cube.Speed[0] = 0;
-            Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2 - 0.001;
+            if(objectRight.Type === 1) {
+                Cube.Speed[0] = 0;
+                Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2 - 0.001;
+            }
+            else {
+                handleGameItems(objectRight);
+            }
         }
 
 
@@ -1199,17 +1384,24 @@ function animate() {
         moveObjects(elapsed);
 
         if (Cube.hitObjectUnder(objectBottom)) {
-            //console.log("placed on ground");
-            Cube.Position[1] = objectBottom.Position[1] + objectBottom.Size[1] / 2 + Cube.Size[1] / 2;
-            Cube.Speed[1] = 0;
-            Cube.RotationSpeed[0] = 0;
-            Cube.Rotation[0] = Math.round((Cube.Rotation[0] / 90)) * 90;
-            jump = false;
+            if(objectBottom.Type === 1) {
+                //console.log("placed on ground");
+                Cube.Position[1] = objectBottom.Position[1] + objectBottom.Size[1] / 2 + Cube.Size[1] / 2;
+                Cube.Speed[1] = 0;
+                Cube.RotationSpeed[0] = 0;
+                Cube.Rotation[0] = Math.round((Cube.Rotation[0] / 90)) * 90;
+                jump = false;
+            }
         }
 
 
     }
     lastTime = timeNow;
+}
+
+function handleGameItems(gameItem){
+    console.log(gameItem.Type);
+    gameItem.RelativePosition[1] = -10;
 }
 
 //
@@ -1241,18 +1433,18 @@ function handleKeys() {
     if (currentlyPressedKeys[37]) {
         // Left cursor key
         if (Cube.Speed[0] > -maxSpeed) {
-            Cube.Speed[0] -= 1;
+            Cube.Speed[0] -= 1.5;
         }
     } else if (currentlyPressedKeys[39]) {
         // Right cursor key
         if (Cube.Speed[0] < maxSpeed) {
-            Cube.Speed[0] += 1;
+            Cube.Speed[0] += 1.5;
         }
     } else {
-        if (Cube.Speed[0] > 0.5) {
-            Cube.Speed[0] -= 0.9;
-        } else if (Cube.Speed[0] < -0.5) {
-            Cube.Speed[0] += 0.9
+        if (Cube.Speed[0] > 1) {
+            Cube.Speed[0] -= 1.9;
+        } else if (Cube.Speed[0] < -1) {
+            Cube.Speed[0] += 1.9
         } else {
             Cube.Speed[0] = 0;
         }
@@ -1289,6 +1481,8 @@ function start() {
 
         // Here's where we call the routine that builds all the objects
         // we'll be drawing.
+        createAllObjects();
+
         initBuffers();
 
         initTextures();
@@ -1299,7 +1493,6 @@ function start() {
         document.onkeyup = handleKeyUp;
 
         initializeGame();
-        StartTime = new Date().getTime();
         // Set up to draw the scene periodically every 15ms.
         setInterval(function () {
             if (texturesLoaded === numberOfTextures && inGame) {

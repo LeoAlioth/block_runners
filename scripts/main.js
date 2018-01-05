@@ -482,15 +482,15 @@ class GameObject {
     }
 
     isAbove(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
         var posYmin = this.Position[1] - this.Size[1] / 2 * 0.5;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Z: " + posZmax, posZmin, objZmax, objZmin);
@@ -541,15 +541,15 @@ class GameObject {
     }
 
     isBehind(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
-        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
-        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
-        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
-        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
@@ -600,15 +600,15 @@ class GameObject {
     }
 
     isRightFrom(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
-        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
-        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
-        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
-        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
@@ -659,15 +659,15 @@ class GameObject {
     }
 
     isLeftFrom(gameObject) {
-        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
-        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
-        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
-        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);

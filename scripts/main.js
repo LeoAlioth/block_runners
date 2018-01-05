@@ -491,9 +491,6 @@ class GameObject {
         var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
         var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
         var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
-        //console.log(gameObject.Size);
-        //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
-        //console.log("Z: " + posZmax, posZmin, objZmax, objZmin);
         var above = false;
         if (posYmin > gameObject.Position[1]) {
             //console.log("higher");
@@ -1626,7 +1623,7 @@ function start() {
                     document.getElementById("dark").innerHTML = "";
                 }
             }
-        }, 15);
+        }, 8);
 
     }
 }

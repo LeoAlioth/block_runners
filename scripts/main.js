@@ -1071,14 +1071,14 @@ function initTextures() {
     GroundPlane.Texture.image.onload = function () {
         handleTextureLoaded(GroundPlane.Texture)
     };
-    GroundPlane.Texture.image.src = "./assets/wall.png";
+    GroundPlane.Texture.image.src = "./assets/ground.png";
 
     Obstacle.Texture = gl.createTexture();
     Obstacle.Texture.image = new Image();
     Obstacle.Texture.image.onload = function () {
         handleTextureLoaded(Obstacle.Texture)
     };
-    Obstacle.Texture.image.src = "./assets/glass.gif";
+    Obstacle.Texture.image.src = "./assets/obstacle.png";
 
 
     PowerUp.Texture = gl.createTexture();
@@ -1238,11 +1238,17 @@ function setUpShaderAndLight() {
 
     // set uniforms for lights as defined in the document
 
+    //gl.uniform3f(
+    //    shaderProgram.ambientColorUniform,
+    //    parseFloat(document.getElementById("ambientR").value),
+    //    parseFloat(document.getElementById("ambientG").value),
+    //    parseFloat(document.getElementById("ambientB").value)
+    //);
     gl.uniform3f(
         shaderProgram.ambientColorUniform,
-        parseFloat(document.getElementById("ambientR").value),
-        parseFloat(document.getElementById("ambientG").value),
-        parseFloat(document.getElementById("ambientB").value)
+        0.2,
+        0.2,
+        0.2
     );
 
     gl.uniform3f(
@@ -1252,18 +1258,32 @@ function setUpShaderAndLight() {
         Cube.Position[2] - 1.5
     );
 
+    //gl.uniform3f(
+    //    shaderProgram.pointLightingSpecularColorUniform,
+    //    parseFloat(document.getElementById("specularR").value),
+    //    parseFloat(document.getElementById("specularG").value),
+    //    parseFloat(document.getElementById("specularB").value)
+    //);
+
     gl.uniform3f(
         shaderProgram.pointLightingSpecularColorUniform,
-        parseFloat(document.getElementById("specularR").value),
-        parseFloat(document.getElementById("specularG").value),
-        parseFloat(document.getElementById("specularB").value)
+        0.8,
+        0.8,
+        0.8
     );
+
+    //gl.uniform3f(
+    //    shaderProgram.pointLightingDiffuseColorUniform,
+    //    parseFloat(document.getElementById("diffuseR").value),
+    //    parseFloat(document.getElementById("diffuseG").value),
+    //    parseFloat(document.getElementById("diffuseB").value)
+    //);
 
     gl.uniform3f(
         shaderProgram.pointLightingDiffuseColorUniform,
-        parseFloat(document.getElementById("diffuseR").value),
-        parseFloat(document.getElementById("diffuseG").value),
-        parseFloat(document.getElementById("diffuseB").value)
+        0.8,
+        0.8,
+        0.8
     );
 
 }

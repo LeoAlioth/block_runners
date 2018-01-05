@@ -205,11 +205,12 @@
 <h1>Block Runners</h1>
 <div id="score">
 </div>
+<input type="button" class="button" onclick="initializeGame();" value="Reset" />
 <div id="content">
     <canvas id="glCanvas" width="960" height="540px">
         No <code>&lt;canvas&gt;</code> suppport in your browser.
     </canvas>
-    <br/>
+  <!--  <br/>
     <br/>
     <table>
         <tr>
@@ -234,7 +235,7 @@
             <td>G: <input type="range" min="0" max="1" step="0.01" id="ambientG" value="0.2" oninput="showValue(this.id, this.value)" /><span id="ambientGspan">0.2</span></td>
             <td>B: <input type="range" min="0" max="1" step="0.01" id="ambientB" value="0.2" oninput="showValue(this.id, this.value)" /><span id="ambientBspan">0.2</span></td>
         </tr>
-    </table>
+    </table>-->
 </div>
 </body>
 </html>

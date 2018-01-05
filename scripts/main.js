@@ -125,40 +125,40 @@ var CubeVertexIndices = [
 
 var SidesVertices = [
     // Front face
-    -0.3, -0.5, 6,
-    0.3, -0.5, 6,
-    0.3, 0.5, 6,
-    -0.3, 0.5, 6,
+    -0.2, -0.5, 6,
+    0.2, -0.5, 6,
+    0.2, 0.5, 6,
+    -0.2, 0.5, 6,
 
     // Back face
-    -0.3, -0.5, -6,
-    -0.3, 0.5, -6,
-    0.3, 0.5, -6,
-    0.3, -0.5, -6,
+    -0.2, -0.5, -6,
+    -0.2, 0.5, -6,
+    0.2, 0.5, -6,
+    0.2, -0.5, -6,
 
     // Top face
-    -0.3, 0.5, -6,
-    -0.3, 0.5, 6,
-    0.3, 0.5, 6,
-    0.3, 0.5, -6,
+    -0.2, 0.5, -6,
+    -0.2, 0.5, 6,
+    0.2, 0.5, 6,
+    0.2, 0.5, -6,
 
     // Bottom face
-    -0.3, -0.5, -6,
-    0.3, -0.5, -6,
-    0.3, -0.5, 6,
-    -0.3, -0.5, 6,
+    -0.2, -0.5, -6,
+    0.2, -0.5, -6,
+    0.2, -0.5, 6,
+    -0.2, -0.5, 6,
 
     // Right face
-    0.3, -0.5, -6,
-    0.3, 0.5, -6,
-    0.3, 0.5, 6,
-    0.3, -0.5, 6,
+    0.2, -0.5, -6,
+    0.2, 0.5, -6,
+    0.2, 0.5, 6,
+    0.2, -0.5, 6,
 
     // Left face
-    -0.3, -0.5, -6,
-    -0.3, -0.5, 6,
-    -0.3, 0.5, 6,
-    -0.3, 0.5, -6
+    -0.2, -0.5, -6,
+    -0.2, -0.5, 6,
+    -0.2, 0.5, 6,
+    -0.2, 0.5, -6
 ];
 var SidesVertexNormals = [
     // Front face
@@ -483,15 +483,15 @@ class GameObject {
     }
 
     isAbove(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
         var posYmin = this.Position[1] - this.Size[1] / 2 * 0.5;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Z: " + posZmax, posZmin, objZmax, objZmin);
@@ -542,18 +542,18 @@ class GameObject {
     }
 
     isBehind(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
-        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
-        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
-        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
-        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
@@ -604,18 +604,18 @@ class GameObject {
     }
 
     isRightFrom(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
-        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
-        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
-        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
-        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
@@ -666,18 +666,18 @@ class GameObject {
     }
 
     isLeftFrom(gameObject) {
-        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.95;
-        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.95;
-        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.95;
-        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.95;
-        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.95;
-        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.95;
-        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.95;
-        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.95;
-        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.95;
-        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.95;
-        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.95;
-        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.95;
+        var posXmin = this.Position[0] - this.Size[0] / 2 * 0.98;
+        var posYmin = this.Position[1] - this.Size[1] / 2 * 0.98;
+        var posZmin = this.Position[2] - this.Size[2] / 2 * 0.98;
+        var posXmax = this.Position[0] + this.Size[0] / 2 * 0.98;
+        var posYmax = this.Position[1] + this.Size[1] / 2 * 0.98;
+        var posZmax = this.Position[2] + this.Size[2] / 2 * 0.98;
+        var objXmin = gameObject.Position[0] - gameObject.Size[0] / 2 * 0.98;
+        var objYmin = gameObject.Position[1] - gameObject.Size[1] / 2 * 0.98;
+        var objZmin = gameObject.Position[2] - gameObject.Size[2] / 2 * 0.98;
+        var objXmax = gameObject.Position[0] + gameObject.Size[0] / 2 * 0.98;
+        var objYmax = gameObject.Position[1] + gameObject.Size[1] / 2 * 0.98;
+        var objZmax = gameObject.Position[2] + gameObject.Size[2] / 2 * 0.98;
         //console.log(gameObject.Size);
         //console.log("X: " + posXmax, posXmin, objXmax, objXmin);
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
@@ -845,11 +845,11 @@ function generateLevelPart() {
     LevelPart.gameObject.push(SideBarrier.clone());
     var objectI = LevelPart.gameObject.length - 1;
     LevelPart.gameObject[objectI].Position = [0, 0, 0];
-    LevelPart.gameObject[objectI].RelativePosition = [-6.3, 0.5, 0];
+    LevelPart.gameObject[objectI].RelativePosition = [-6.2, 0.5, 0];
     LevelPart.gameObject.push(SideBarrier.clone());
     var objectI = LevelPart.gameObject.length - 1;
     LevelPart.gameObject[objectI].Position = [0, 0, 0];
-    LevelPart.gameObject[objectI].RelativePosition = [6.3, 0.5, 0];
+    LevelPart.gameObject[objectI].RelativePosition = [6.2, 0.5, 0];
     for (var i = 0; i <= Math.round(score / 1000); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
@@ -1408,7 +1408,7 @@ function animate() {
         objectRight = Cube.getObjectOnRight();
 
 
-        if(Math.abs(Cube.Position[0]) > 5 && Cube.Position[1] < 1.4 && Math.abs(Cube.Position[0]) < 7){
+        if(Math.abs(Cube.Position[0]) > 5 && Cube.Position[1] < 1.1 && Math.abs(Cube.Position[0]) < 6){
             if (Cube.Position[0] < 0) {
                 Cube.Position[0] = -5
             } else {
@@ -1429,7 +1429,7 @@ function animate() {
             inGame = false;
             GameOver = true;
         }
-        if(Cube.Position[1] < -10){
+        if(Cube.Position[1] < -30){
             hp--;
             if (hp < 1) {
                 inGame = false;

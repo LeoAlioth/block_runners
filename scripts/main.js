@@ -2,7 +2,6 @@
 var canvas;
 var gl;
 
-
 // arrays for object buffers
 var CubeVertices = [
     // Front face

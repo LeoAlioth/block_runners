@@ -837,7 +837,7 @@ function generateLevelPart() {
     objectI = LevelPart.gameObject.length - 1;
     LevelPart.gameObject[objectI].Position = [0, 0, 0];
     LevelPart.gameObject[objectI].RelativePosition = [6.2, 0.5, 0];
-    for (var i = 0; i <= Math.round(score / 1000); i++) {
+    for (var i = 0; i <= Math.round(score / 2000); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
         objectI = LevelPart.gameObject.length - 1;
@@ -850,7 +850,7 @@ function generateLevelPart() {
         LevelPart.gameObject[objectI].RelativePosition[1] = posY;
         LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
     }
-    if (Math.random() > 095) {
+    if (Math.random() > 0.95) {
         LevelPart.gameObject.push(HealthCube.clone());
         objectI = LevelPart.gameObject.length - 1;
         LevelPart.gameObject[objectI].Position = [0, 0, 0];

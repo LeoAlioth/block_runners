@@ -125,40 +125,40 @@ var CubeVertexIndices = [
 
 var SidesVertices = [
     // Front face
-    -0.5, -0.5, 6,
-    0.5, -0.5, 6,
-    0.5, 0.5, 6,
-    -0.5, 0.5, 6,
+    -0.3, -0.5, 6,
+    0.3, -0.5, 6,
+    0.3, 0.5, 6,
+    -0.3, 0.5, 6,
 
     // Back face
-    -0.5, -0.5, -6,
-    -0.5, 0.5, -6,
-    0.5, 0.5, -6,
-    0.5, -0.5, -6,
+    -0.3, -0.5, -6,
+    -0.3, 0.5, -6,
+    0.3, 0.5, -6,
+    0.3, -0.5, -6,
 
     // Top face
-    -0.5, 0.5, -6,
-    -0.5, 0.5, 6,
-    0.5, 0.5, 6,
-    0.5, 0.5, -6,
+    -0.3, 0.5, -6,
+    -0.3, 0.5, 6,
+    0.3, 0.5, 6,
+    0.3, 0.5, -6,
 
     // Bottom face
-    -0.5, -0.5, -6,
-    0.5, -0.5, -6,
-    0.5, -0.5, 6,
-    -0.5, -0.5, 6,
+    -0.3, -0.5, -6,
+    0.3, -0.5, -6,
+    0.3, -0.5, 6,
+    -0.3, -0.5, 6,
 
     // Right face
-    0.5, -0.5, -6,
-    0.5, 0.5, -6,
-    0.5, 0.5, 6,
-    0.5, -0.5, 6,
+    0.3, -0.5, -6,
+    0.3, 0.5, -6,
+    0.3, 0.5, 6,
+    0.3, -0.5, 6,
 
     // Left face
-    -0.5, -0.5, -6,
-    -0.5, -0.5, 6,
-    -0.5, 0.5, 6,
-    -0.5, 0.5, -6
+    -0.3, -0.5, -6,
+    -0.3, -0.5, 6,
+    -0.3, 0.5, 6,
+    -0.3, 0.5, -6
 ];
 var SidesVertexNormals = [
     // Front face
@@ -844,12 +844,12 @@ function generateLevelPart() {
     LevelPart.Ground = GroundPlane.clone();
     LevelPart.gameObject.push(SideBarrier.clone());
     var objectI = LevelPart.gameObject.length - 1;
-    LevelPart.gameObject[objectI].Position = [-6.5, 0.5, 0];
-    LevelPart.gameObject[objectI].RelativePosition = [-6.5, 0.5, 0];
+    LevelPart.gameObject[objectI].Position = [0, 0, 0];
+    LevelPart.gameObject[objectI].RelativePosition = [-6.3, 0.5, 0];
     LevelPart.gameObject.push(SideBarrier.clone());
     var objectI = LevelPart.gameObject.length - 1;
-    LevelPart.gameObject[objectI].Position = [6.5, 0.5, 0];
-    LevelPart.gameObject[objectI].RelativePosition = [6.5, 0.5, 0];
+    LevelPart.gameObject[objectI].Position = [0, 0, 0];
+    LevelPart.gameObject[objectI].RelativePosition = [6.3, 0.5, 0];
     for (var i = 0; i <= Math.round(score / 1000); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
@@ -1408,7 +1408,7 @@ function animate() {
         objectRight = Cube.getObjectOnRight();
 
 
-        if(Math.abs(Cube.Position[0]) > 5 && Cube.Position[1] < 1.4 && Math.abs(Cube.Position[0]) < 8){
+        if(Math.abs(Cube.Position[0]) > 5 && Cube.Position[1] < 1.4 && Math.abs(Cube.Position[0]) < 7){
             if (Cube.Position[0] < 0) {
                 Cube.Position[0] = -5
             } else {

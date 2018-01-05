@@ -62,7 +62,7 @@ td {
 
 #score{
 	position: absolute;
-	top:80px;
+	top:85px;
 	left:46%;
 	color:white;
 	font-family: Courier New, Courier, monospace;
@@ -71,7 +71,16 @@ td {
 }
 #hp{
 	position: absolute;
-	top:95px;
+	top:100px;
+	left:46%;
+	color:white;
+	font-family: Courier New, Courier, monospace;
+	font-weight: bold;
+
+}
+#dark{
+	position: absolute;
+	top:115px;
 	left:46%;
 	color:white;
 	font-family: Courier New, Courier, monospace;

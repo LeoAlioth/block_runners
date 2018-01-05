@@ -243,7 +243,6 @@ var ObstacleVertexIndices = [
     20, 21, 22, 20, 22, 23  // Left face
 ];
 
-
 var PowerUpVertices = [
     // Front face
     -0.5, -0.5, 0.5,

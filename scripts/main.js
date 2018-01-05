@@ -123,127 +123,7 @@ var CubeVertexIndices = [
     20, 21, 22, 20, 22, 23  // Left face
 ];
 
-var ObstacleVertices = [
-    // Front face
-    -1.0, -1.0, 1.0,
-    1.0, -1.0, 1.0,
-    1.0, 1.0, 1.0,
-    -1.0, 1.0, 1.0,
-
-    // Back face
-    -1.0, -1.0, -1.0,
-    -1.0, 1.0, -1.0,
-    1.0, 1.0, -1.0,
-    1.0, -1.0, -1.0,
-
-    // Top face
-    -1.0, 1.0, -1.0,
-    -1.0, 1.0, 1.0,
-    1.0, 1.0, 1.0,
-    1.0, 1.0, -1.0,
-
-    // Bottom face
-    -1.0, -1.0, -1.0,
-    1.0, -1.0, -1.0,
-    1.0, -1.0, 1.0,
-    -1.0, -1.0, 1.0,
-
-    // Right face
-    1.0, -1.0, -1.0,
-    1.0, 1.0, -1.0,
-    1.0, 1.0, 1.0,
-    1.0, -1.0, 1.0,
-
-    // Left face
-    -1.0, -1.0, -1.0,
-    -1.0, -1.0, 1.0,
-    -1.0, 1.0, 1.0,
-    -1.0, 1.0, -1.0
-];
-var ObstacleVertexNormals = [
-    // Front face
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-
-    // Back face
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-
-    // Top face
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-
-    // Bottom face
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-
-    // Right face
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-
-    // Left face
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0
-];
-var ObstacleTextureCoords = [
-    // Front face
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-
-    // Back face
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    0.0, 0.0,
-
-    // Top face
-    0.0, 1.0,
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-
-    // Bottom face
-    1.0, 1.0,
-    0.0, 1.0,
-    0.0, 0.0,
-    1.0, 0.0,
-
-    // Right face
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    0.0, 0.0,
-
-    // Left face
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0
-];
-var ObstacleVertexIndices = [
-    0, 1, 2, 0, 2, 3,    // Front face
-    4, 5, 6, 4, 6, 7,    // Back face
-    8, 9, 10, 8, 10, 11,  // Top face
-    12, 13, 14, 12, 14, 15, // Bottom face
-    16, 17, 18, 16, 18, 19, // Right face
-    20, 21, 22, 20, 22, 23  // Left face
-];
-
-var PowerUpVertices = [
+var SmallCubeVertices = [
     // Front face
     -0.5, -0.5, 0.5,
     0.5, -0.5, 0.5,
@@ -280,7 +160,7 @@ var PowerUpVertices = [
     -0.5, 0.5, 0.5,
     -0.5, 0.5, -0.5
 ];
-var PowerUpVertexNormals = [
+var SmallCubeVertexNormals = [
     // Front face
     0.0, 0.0, 1.0,
     0.0, 0.0, 1.0,
@@ -317,7 +197,7 @@ var PowerUpVertexNormals = [
     -1.0, 0.0, 0.0,
     -1.0, 0.0, 0.0
 ];
-var PowerUpTextureCoords = [
+var SmallCubeTextureCoords = [
     // Front face
     0.0, 0.0,
     1.0, 0.0,
@@ -354,7 +234,7 @@ var PowerUpTextureCoords = [
     1.0, 1.0,
     0.0, 1.0
 ];
-var PowerUpVertexIndices = [
+var SmallCubeVertexIndices = [
     0, 1, 2, 0, 2, 3,    // Front face
     4, 5, 6, 4, 6, 7,    // Back face
     8, 9, 10, 8, 10, 11,  // Top face
@@ -729,7 +609,8 @@ class LevelPiece {
 
 //variables for different objects in game;
 var Cube;
-var PowerUp;
+var HealthCube;
+var LightsOffCube;
 var GroundPlane;
 var Obstacle;
 var LevelPart;
@@ -746,7 +627,7 @@ var lastTime = 0;
 
 
 // Variable that stores  loading state of textures.
-var numberOfTextures = 4;
+var numberOfTextures = 5;
 var texturesLoaded = 0;
 
 // Keyboard handling helper variable for reading the status of keys
@@ -767,7 +648,7 @@ var objectBottom;
 var GameOver;
 var hp;
 var invincible;
-var invincibeTimer;
+var invincibleTimer;
 var dark;
 var darkTimer;
 
@@ -780,11 +661,14 @@ function createAllObjects() {
     GroundPlane.Type = 1;
     console.log("GroundPlane size: " + GroundPlane.Size);
     Obstacle = new GameObject();
-    Obstacle.Size = getObjectSize(ObstacleVertices);
+    Obstacle.Size = getObjectSize(CubeVertices);
     Obstacle.Type = 1;
-    PowerUp = new GameObject();
-    PowerUp.Size = getObjectSize(PowerUpVertices);
-    PowerUp.Type = 5;
+    HealthCube = new GameObject();
+    HealthCube.Size = getObjectSize(SmallCubeVertices);
+    HealthCube.Type = 5;
+    LightsOffCube = new GameObject();
+    LightsOffCube.Size = getObjectSize(SmallCubeVertices);
+    LightsOffCube.Type = 10;
     LevelPart = new Array(20);
 
 
@@ -844,13 +728,26 @@ function generateLevelPart() {
         LevelPart.gameObject[objectI].RelativePosition[1] = posY;
         LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
     }
-    if(Math.random() > 0.5){
-        LevelPart.gameObject.push(PowerUp.clone());
+    if (Math.random() > 0.7) {
+        LevelPart.gameObject.push(HealthCube.clone());
         var objectI = LevelPart.gameObject.length - 1;
         LevelPart.gameObject[objectI].Position = [0, 0, 0];
         LevelPart.gameObject[objectI].RelativePosition = [0, 0, 0];
         var posX = (Math.random() - 0.5) * GroundPlane.Size[0];
-        var posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 2 + 1;
+        var posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 3 + 1;
+        var posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
+        LevelPart.gameObject[objectI].RelativePosition[0] = posX;
+        LevelPart.gameObject[objectI].RelativePosition[1] = posY;
+        LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
+
+    }
+    if (Math.random() > 0.7) {
+        LevelPart.gameObject.push(LightsOffCube.clone());
+        var objectI = LevelPart.gameObject.length - 1;
+        LevelPart.gameObject[objectI].Position = [0, 0, 0];
+        LevelPart.gameObject[objectI].RelativePosition = [0, 0, 0];
+        var posX = (Math.random() - 0.5) * GroundPlane.Size[0];
+        var posY = Math.round(Math.random() * 0.6) * GroundPlane.Size[0] / 3 + 1;
         var posZ = (Math.random() - 0.5) * GroundPlane.Size[0];
         LevelPart.gameObject[objectI].RelativePosition[0] = posX;
         LevelPart.gameObject[objectI].RelativePosition[1] = posY;
@@ -885,7 +782,8 @@ function initializeGame() {
         LevelPart[i].moveComponents();
     }
     StartTime = new Date().getTime();
-    invincibeTimer = -2000;
+    invincibleTimer = -10000;
+    darkTimer = -10000;
 }
 
 function setCameraPosition(pMatrix, posX, posY, posZ, pitch, yaw) {
@@ -1085,12 +983,20 @@ function initTextures() {
     Obstacle.Texture.image.src = "./assets/obstacle.png";
 
 
-    PowerUp.Texture = gl.createTexture();
-    PowerUp.Texture.image = new Image();
-    PowerUp.Texture.image.onload = function () {
-        handleTextureLoaded(PowerUp.Texture);
+    HealthCube.Texture = gl.createTexture();
+    HealthCube.Texture.image = new Image();
+    HealthCube.Texture.image.onload = function () {
+        handleTextureLoaded(HealthCube.Texture);
     };
-    PowerUp.Texture.image.src = "./assets/companion_cube.png";
+    HealthCube.Texture.image.src = "./assets/companion_cube.png";
+
+
+    LightsOffCube.Texture = gl.createTexture();
+    LightsOffCube.Texture.image = new Image();
+    LightsOffCube.Texture.image.onload = function () {
+        handleTextureLoaded(LightsOffCube.Texture);
+    };
+    LightsOffCube.Texture.image.src = "./assets/moon.jpg";
 
     //console.log("initializing GroundPlane");
 
@@ -1177,8 +1083,9 @@ function initGameObjectBuffers(gameObject, vertices, vertexNormals, textureCoord
 function initBuffers() {
     initGameObjectBuffers(GroundPlane, GroundPlaneVertices, GroundPlaneVertexNormals, GroundPlaneTextureCoords, GroundPlaneVertexIndices);
     initGameObjectBuffers(Cube, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
-    initGameObjectBuffers(Obstacle, ObstacleVertices, ObstacleVertexNormals, ObstacleTextureCoords, ObstacleVertexIndices);
-    initGameObjectBuffers(PowerUp, PowerUpVertices, PowerUpVertexNormals, PowerUpTextureCoords, PowerUpVertexIndices);
+    initGameObjectBuffers(Obstacle, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
+    initGameObjectBuffers(HealthCube, SmallCubeVertices, SmallCubeVertexNormals, SmallCubeTextureCoords, SmallCubeVertexIndices);
+    initGameObjectBuffers(LightsOffCube, SmallCubeVertices, SmallCubeVertexNormals, SmallCubeTextureCoords, SmallCubeVertexIndices);
 }
 
 //
@@ -1240,54 +1147,57 @@ function setUpShaderAndLight() {
     // the center of the scene.
     mat4.identity(mvMatrix);
 
-    // set uniforms for lights as defined in the document
+    if (!dark) {
+        gl.uniform3f(
+            shaderProgram.ambientColorUniform,
+            0.2,
+            0.2,
+            0.2
+        );
 
-    //gl.uniform3f(
-    //    shaderProgram.ambientColorUniform,
-    //    parseFloat(document.getElementById("ambientR").value),
-    //    parseFloat(document.getElementById("ambientG").value),
-    //    parseFloat(document.getElementById("ambientB").value)
-    //);
-    gl.uniform3f(
-        shaderProgram.ambientColorUniform,
-        0.2,
-        0.2,
-        0.2
-    );
+
+        gl.uniform3f(
+            shaderProgram.pointLightingSpecularColorUniform,
+            0.5,
+            0.5,
+            0.5
+        );
+
+        gl.uniform3f(
+            shaderProgram.pointLightingDiffuseColorUniform,
+            1,
+            1,
+            1
+        );
+
+    } else {
+        gl.uniform3f(
+            shaderProgram.ambientColorUniform,
+            0.0,
+            0.0,
+            0.0
+        );
+
+        gl.uniform3f(
+            shaderProgram.pointLightingSpecularColorUniform,
+            0.3,
+            0.3,
+            0.3
+        );
+
+        gl.uniform3f(
+            shaderProgram.pointLightingDiffuseColorUniform,
+            0.7,
+            0.7,
+            0.7
+        );
+    }
 
     gl.uniform3f(
         shaderProgram.pointLightingLocationUniform,
         Cube.Position[0],
         Cube.Position[1] + 1.5,
         Cube.Position[2] - 1.5
-    );
-
-    //gl.uniform3f(
-    //    shaderProgram.pointLightingSpecularColorUniform,
-    //    parseFloat(document.getElementById("specularR").value),
-    //    parseFloat(document.getElementById("specularG").value),
-    //    parseFloat(document.getElementById("specularB").value)
-    //);
-
-    gl.uniform3f(
-        shaderProgram.pointLightingSpecularColorUniform,
-        0.8,
-        0.8,
-        0.8
-    );
-
-    //gl.uniform3f(
-    //    shaderProgram.pointLightingDiffuseColorUniform,
-    //    parseFloat(document.getElementById("diffuseR").value),
-    //    parseFloat(document.getElementById("diffuseG").value),
-    //    parseFloat(document.getElementById("diffuseB").value)
-    //);
-
-    gl.uniform3f(
-        shaderProgram.pointLightingDiffuseColorUniform,
-        0.8,
-        0.8,
-        0.8
     );
 
 }
@@ -1306,7 +1216,8 @@ function drawScene() {
     setCameraPosition(pMatrix, Cube.Position[0] / 2, Cube.Position[1] / 2 + 5, Cube.Position[2] + 10, 10, 0);
 
     setUpShaderAndLight();
-    if(!invincible || Math.round( new Date().getTime()/250)%2 === 1 ) {
+
+    if (!invincible || Math.round(new Date().getTime() / 250) % 2 === 1) {
         drawObject(Cube);
     }
     for (var i = 0; i < LevelPart.length; i++) {
@@ -1352,21 +1263,26 @@ function animate() {
         objectRight = Cube.getObjectOnRight();
 
 
-        if (invincible && invincibeTimer + 2000 < timeNow){
+        if (invincible && invincibleTimer + 2000 < timeNow) {
             invincible = false;
         }
-        if(hp < 1){
+
+        if (darkTimer + 7000 < timeNow) {
+            dark = false;
+        }
+
+        if (hp < 1) {
             inGame = false;
             GameOver = true;
         }
 
         if (Cube.hitObjectInFront(objectFront)) {
-            if(objectFront.Type === 1) {
-                if(!invincible) {
+            if (objectFront.Type === 1) {
+                if (!invincible) {
                     console.log("hit object in front");
                     hp--;
                     invincible = true;
-                    invincibeTimer = new Date().getTime();
+                    invincibleTimer = new Date().getTime();
                 }
             }
             else {
@@ -1376,7 +1292,7 @@ function animate() {
         }
 
         if (jump && Cube.hitObjectUnder(objectBottom)) {
-            if(objectBottom.Type === 1) {
+            if (objectBottom.Type === 1) {
                 Cube.Speed[1] = 20;
                 jump = false;
                 //console.log("starting jump");
@@ -1386,7 +1302,7 @@ function animate() {
         }
 
         if (Cube.hitObjectOnLeft(objectLeft)) {
-            if(objectLeft.Type === 1 && !invincible) {
+            if (objectLeft.Type === 1 && !invincible) {
                 Cube.Speed[0] = 0;
                 Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2 + 0.001;
             }
@@ -1396,7 +1312,7 @@ function animate() {
         }
 
         if (Cube.hitObjectOnRight(objectRight)) {
-            if(objectRight.Type === 1 && !invincible) {
+            if (objectRight.Type === 1 && !invincible) {
                 Cube.Speed[0] = 0;
                 Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2 - 0.001;
             }
@@ -1415,7 +1331,7 @@ function animate() {
         moveObjects(elapsed);
 
         if (Cube.hitObjectUnder(objectBottom)) {
-            if(objectBottom.Type === 1) {
+            if (objectBottom.Type === 1) {
                 //console.log("placed on ground");
                 Cube.Position[1] = objectBottom.Position[1] + objectBottom.Size[1] / 2 + Cube.Size[1] / 2;
                 Cube.Speed[1] = 0;
@@ -1430,12 +1346,17 @@ function animate() {
     lastTime = timeNow;
 }
 
-function handleGameItems(gameItem){
-    if(gameItem.Type===5){
+function handleGameItems(gameItem) {
+    if (gameItem.Type === 5) {
         hp++;
     }
-    if(gameItem.Type !== 1) {
+    if (gameItem.Type === 10) {
+        dark = true;
+        darkTimer = new Date().getTime();
+    }
+    if (gameItem.Type !== 1) {
         gameItem.RelativePosition[1] = -10;
+        gameItem.Position[1] = -10;
     }
 }
 

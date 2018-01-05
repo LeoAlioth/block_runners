@@ -123,6 +123,126 @@ var CubeVertexIndices = [
     20, 21, 22, 20, 22, 23  // Left face
 ];
 
+var SidesVertices = [
+    // Front face
+    -0.5, -0.5, 6,
+    0.5, -0.5, 6,
+    0.5, 0.5, 6,
+    -0.5, 0.5, 6,
+
+    // Back face
+    -0.5, -0.5, -6,
+    -0.5, 0.5, -6,
+    0.5, 0.5, -6,
+    0.5, -0.5, -6,
+
+    // Top face
+    -0.5, 0.5, -6,
+    -0.5, 0.5, 6,
+    0.5, 0.5, 6,
+    0.5, 0.5, -6,
+
+    // Bottom face
+    -0.5, -0.5, -6,
+    0.5, -0.5, -6,
+    0.5, -0.5, 6,
+    -0.5, -0.5, 6,
+
+    // Right face
+    0.5, -0.5, -6,
+    0.5, 0.5, -6,
+    0.5, 0.5, 6,
+    0.5, -0.5, 6,
+
+    // Left face
+    -0.5, -0.5, -6,
+    -0.5, -0.5, 6,
+    -0.5, 0.5, 6,
+    -0.5, 0.5, -6
+];
+var SidesVertexNormals = [
+    // Front face
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+    0.0, 0.0, 1.0,
+
+    // Back face
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+
+    // Top face
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 0.0,
+
+    // Bottom face
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+    0.0, -1.0, 0.0,
+
+    // Right face
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+
+    // Left face
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0,
+    -1.0, 0.0, 0.0
+];
+var SidesTextureCoords = [
+    // Front face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+
+    // Back face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Top face
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+
+    // Bottom face
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+
+    // Right face
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+
+    // Left face
+    0.0, 0.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0
+];
+var SidesVertexIndices = [
+    0, 1, 2, 0, 2, 3,    // Front face
+    4, 5, 6, 4, 6, 7,    // Back face
+    8, 9, 10, 8, 10, 11,  // Top face
+    12, 13, 14, 12, 14, 15, // Bottom face
+    16, 17, 18, 16, 18, 19, // Right face
+    20, 21, 22, 20, 22, 23  // Left face
+];
+
 var SmallCubeVertices = [
     // Front face
     -0.5, -0.5, 0.5,
@@ -563,7 +683,7 @@ class GameObject {
         //console.log("Y: " + posYmax, posYmin, objYmax, objYmin);
         //console.log("testing");
         var above = false;
-        if (posXmin <= gameObject.Position[0]) {
+        if (posXmax <= gameObject.Position[0]) {
             //console.log("higher");
             if (((objZmin <= posZmax && posZmax <= objZmax) || (objZmin <= posZmin && posZmin <= objZmax)) || ((posZmin <= objZmax && objZmax <= posZmax) || (posZmin <= objZmin && objZmin <= posZmax))) {
                 //console.log("x right");
@@ -615,6 +735,8 @@ var GroundPlane;
 var Obstacle;
 var LevelPart;
 var StartTime;
+var SideBarrier;
+
 
 
 // Model-View and Projection matrices
@@ -660,7 +782,9 @@ function createAllObjects() {
     GroundPlane = new GameObject();
     GroundPlane.Size = getObjectSize(GroundPlaneVertices);
     GroundPlane.Type = 1;
-    console.log("GroundPlane size: " + GroundPlane.Size);
+    SideBarrier = new GameObject();
+    SideBarrier.Size = getObjectSize(SidesVertices);
+    SideBarrier.Type = 1;
     Obstacle = new GameObject();
     Obstacle.Size = getObjectSize(CubeVertices);
     Obstacle.Type = 1;
@@ -718,6 +842,14 @@ function getObjectSize(vertices) {
 function generateLevelPart() {
     var LevelPart = new LevelPiece();
     LevelPart.Ground = GroundPlane.clone();
+    LevelPart.gameObject.push(SideBarrier.clone());
+    var objectI = LevelPart.gameObject.length - 1;
+    LevelPart.gameObject[objectI].Position = [-6.5, 0.5, 0];
+    LevelPart.gameObject[objectI].RelativePosition = [-6.5, 0.5, 0];
+    LevelPart.gameObject.push(SideBarrier.clone());
+    var objectI = LevelPart.gameObject.length - 1;
+    LevelPart.gameObject[objectI].Position = [6.5, 0.5, 0];
+    LevelPart.gameObject[objectI].RelativePosition = [6.5, 0.5, 0];
     for (var i = 0; i <= Math.round(score / 1000); i++) {
         //console.log("obstacle")
         LevelPart.gameObject.push(Obstacle.clone());
@@ -780,7 +912,9 @@ function initializeGame() {
         LevelPart[i] = generateLevelPart();
         LevelPart[i].partPosition = [0, 0, -GroundPlane.Size[2] * i];
         if (i < 3) {
-            LevelPart[i].gameObject = [];
+            while(LevelPart[i].gameObject.length > 2) {
+                LevelPart[i].gameObject.pop();
+            }
         }
         LevelPart[i].moveComponents();
     }
@@ -978,6 +1112,8 @@ function initTextures() {
     };
     GroundPlane.Texture.image.src = "./assets/ground.png";
 
+    SideBarrier.Texture = GroundPlane.Texture;
+
     Obstacle.Texture = gl.createTexture();
     Obstacle.Texture.image = new Image();
     Obstacle.Texture.image.onload = function () {
@@ -1089,6 +1225,7 @@ function initBuffers() {
     initGameObjectBuffers(Obstacle, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
     initGameObjectBuffers(HealthCube, SmallCubeVertices, SmallCubeVertexNormals, SmallCubeTextureCoords, SmallCubeVertexIndices);
     initGameObjectBuffers(LightsOffCube, SmallCubeVertices, SmallCubeVertexNormals, SmallCubeTextureCoords, SmallCubeVertexIndices);
+    initGameObjectBuffers(SideBarrier, SidesVertices, SidesVertexNormals, SidesTextureCoords, SidesVertexIndices);
 }
 
 //
@@ -1270,6 +1407,15 @@ function animate() {
         objectLeft = Cube.getObjectOnLeft();
         objectRight = Cube.getObjectOnRight();
 
+
+        if(Math.abs(Cube.Position[0]) > 5 && Cube.Position[1] < 1.4 && Math.abs(Cube.Position[0]) < 8){
+            if (Cube.Position[0] < 0) {
+                Cube.Position[0] = -5
+            } else {
+                Cube.Position[0] = 5
+            }
+            Cube.Speed[0]=0;
+        }
 
         if (invincible && invincibleTimer + 2000 < timeNow) {
             invincible = false;

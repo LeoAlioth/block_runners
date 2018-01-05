@@ -1625,7 +1625,7 @@ function start() {
                 handleKeys();
                 drawScene();
                 var currTime = new Date().getTime();
-                score = Math.round((currTime - StartTime) * startingTravelSpeed / 100) / 10;
+                score = ~~(Math.round((currTime - StartTime) * startingTravelSpeed / 100) / 10);
                 document.getElementById("score").innerHTML = "Score: " + score.toString();// +  "<br/>" +"Speed: " + (startingTravelSpeed + speedupFactor * score / 1000 ) + "<br/>" + "CubePosition: " + Cube.Position + "<br/>" + "TilePosition: " + LevelPart[1].partPosition ;
                 document.getElementById("hp").innerHTML = "HP: " + hp.toString();
                 if(darkForNextSeconds > 0){

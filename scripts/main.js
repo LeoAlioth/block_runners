@@ -850,7 +850,7 @@ function generateLevelPart() {
         LevelPart.gameObject[objectI].RelativePosition[1] = posY;
         LevelPart.gameObject[objectI].RelativePosition[2] = posZ;
     }
-    if (Math.random() > 0.95) {
+    if (Math.random() > 0.93) {
         LevelPart.gameObject.push(HealthCube.clone());
         objectI = LevelPart.gameObject.length - 1;
         LevelPart.gameObject[objectI].Position = [0, 0, 0];
@@ -885,11 +885,11 @@ function initializeGame() {
     Cube.Rotation = [0.0, 0.0, 0.0];
     Cube.Speed = [0.0, 0.0, 0.0];
     Cube.RotationSpeed = [0.0, 0.0, 0.0];
-    startingTravelSpeed = 7;
+    startingTravelSpeed = 10;
     speedupFactor = 5;
     score = 0;
     jump = false;
-    maxSpeed = 20;
+    maxSpeed = 30;
     inGame = true;
     GameOver = false;
     hp = 3;

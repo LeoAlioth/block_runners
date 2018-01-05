@@ -651,6 +651,7 @@ var invincible;
 var invincibleTimer;
 var dark;
 var darkTimer;
+var darkForNextSeconds;
 
 function createAllObjects() {
     Cube = new GameObject();
@@ -666,9 +667,11 @@ function createAllObjects() {
     HealthCube = new GameObject();
     HealthCube.Size = getObjectSize(SmallCubeVertices);
     HealthCube.Type = 5;
+    HealthCube.RotationSpeed = [0, 90, 0];
     LightsOffCube = new GameObject();
     LightsOffCube.Size = getObjectSize(SmallCubeVertices);
     LightsOffCube.Type = 10;
+    LightsOffCube.RotationSpeed = [0, 90, 0];
     LevelPart = new Array(20);
 
 
@@ -1243,6 +1246,11 @@ function moveObjects(elapsed) {
     for (var i = 0; i < LevelPart.length; i++) {
         LevelPart[i].partPosition[2] += elapsed * (startingTravelSpeed + speedupFactor * score / 1000) / 1000;
         LevelPart[i].moveComponents();
+        for(var j = 0; j < LevelPart[i].gameObject.length; j++){
+            LevelPart[i].gameObject[j].Rotation[0] += LevelPart[i].gameObject[j].RotationSpeed[0] * elapsed / 1000;
+            LevelPart[i].gameObject[j].Rotation[1] += LevelPart[i].gameObject[j].RotationSpeed[1] * elapsed / 1000;
+            LevelPart[i].gameObject[j].Rotation[2] += LevelPart[i].gameObject[j].RotationSpeed[2] * elapsed / 1000;
+        }
     }
     if (LevelPart[0].partPosition[2] > GroundPlane.Size[2]) {
         LevelPart.shift();
@@ -1266,14 +1274,29 @@ function animate() {
         if (invincible && invincibleTimer + 2000 < timeNow) {
             invincible = false;
         }
-
-        if (darkTimer + 7000 < timeNow) {
+        darkForNextSeconds = darkTimer + 7000 - timeNow;
+        if (darkForNextSeconds < 0) {
             dark = false;
         }
 
         if (hp < 1) {
             inGame = false;
             GameOver = true;
+        }
+        if(Cube.Position[1] < -10){
+            hp--;
+            if (hp < 1) {
+                inGame = false;
+                GameOver = true;
+            }
+            Cube.Speed[0] = 0;
+            Cube.Speed[1] = 0;
+            Cube.Speed[2] = 0;
+            Cube.Position[0] = 0;
+            Cube.Position[1] = 2;
+            Cube.Position[2] = 0;
+            invincible = true;
+            invincibleTimer = new Date().getTime();
         }
 
         if (Cube.hitObjectInFront(objectFront)) {

@@ -767,6 +767,9 @@ var objectBottom;
 var GameOver;
 var hp;
 var invincible;
+var invincibeTimer;
+var dark;
+var darkTimer;
 
 function createAllObjects() {
     Cube = new GameObject();
@@ -783,6 +786,7 @@ function createAllObjects() {
     PowerUp.Size = getObjectSize(PowerUpVertices);
     PowerUp.Type = 5;
     LevelPart = new Array(20);
+
 
 }
 
@@ -881,7 +885,7 @@ function initializeGame() {
         LevelPart[i].moveComponents();
     }
     StartTime = new Date().getTime();
-
+    invincibeTimer = -2000;
 }
 
 function setCameraPosition(pMatrix, posX, posY, posZ, pitch, yaw) {
@@ -1302,8 +1306,9 @@ function drawScene() {
     setCameraPosition(pMatrix, Cube.Position[0] / 2, Cube.Position[1] / 2 + 5, Cube.Position[2] + 10, 10, 0);
 
     setUpShaderAndLight();
-
-    drawObject(Cube);
+    if(!invincible || Math.round( new Date().getTime()/250)%2 === 1 ) {
+        drawObject(Cube);
+    }
     for (var i = 0; i < LevelPart.length; i++) {
         drawObject(LevelPart[i].Ground);
         for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
@@ -1346,14 +1351,22 @@ function animate() {
         objectLeft = Cube.getObjectOnLeft();
         objectRight = Cube.getObjectOnRight();
 
+
+        if (invincible && invincibeTimer + 2000 < timeNow){
+            invincible = false;
+        }
+        if(hp < 1){
+            inGame = false;
+            GameOver = true;
+        }
+
         if (Cube.hitObjectInFront(objectFront)) {
             if(objectFront.Type === 1) {
-                if(!(hp > 0) && ! invincible) {
+                if(!invincible) {
                     console.log("hit object in front");
-                    inGame = false;
-                    GameOver = true;
-                } else {
                     hp--;
+                    invincible = true;
+                    invincibeTimer = new Date().getTime();
                 }
             }
             else {
@@ -1373,7 +1386,7 @@ function animate() {
         }
 
         if (Cube.hitObjectOnLeft(objectLeft)) {
-            if(objectLeft.Type === 1) {
+            if(objectLeft.Type === 1 && !invincible) {
                 Cube.Speed[0] = 0;
                 Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2 + 0.001;
             }
@@ -1383,7 +1396,7 @@ function animate() {
         }
 
         if (Cube.hitObjectOnRight(objectRight)) {
-            if(objectRight.Type === 1) {
+            if(objectRight.Type === 1 && !invincible) {
                 Cube.Speed[0] = 0;
                 Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2 - 0.001;
             }
@@ -1418,8 +1431,12 @@ function animate() {
 }
 
 function handleGameItems(gameItem){
-    console.log(gameItem.Type);
-    gameItem.RelativePosition[1] = -10;
+    if(gameItem.Type===5){
+        hp++;
+    }
+    if(gameItem.Type !== 1) {
+        gameItem.RelativePosition[1] = -10;
+    }
 }
 
 //

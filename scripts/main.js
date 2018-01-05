@@ -4,125 +4,55 @@ var gl;
 
 
 // arrays for object buffers
-var CubeVertices = [
-    // Front face
-    -1.0, -1.0, 1.0,
-    1.0, -1.0, 1.0,
-    1.0, 1.0, 1.0,
-    -1.0, 1.0, 1.0,
 
-    // Back face
-    -1.0, -1.0, -1.0,
-    -1.0, 1.0, -1.0,
-    1.0, 1.0, -1.0,
-    1.0, -1.0, -1.0,
+var latitudeBands = 30;
+var longitudeBands = 30;
+var radius = 2;
 
-    // Top face
-    -1.0, 1.0, -1.0,
-    -1.0, 1.0, 1.0,
-    1.0, 1.0, 1.0,
-    1.0, 1.0, -1.0,
+var SphereVertices = [];
+var SphereVertexNormals = [];
+var SphereTextureCoords = [];
+for (var latNumber=0; latNumber <= latitudeBands; latNumber++) {
+  var theta = latNumber * Math.PI / latitudeBands;
+  var sinTheta = Math.sin(theta);
+  var cosTheta = Math.cos(theta);
 
-    // Bottom face
-    -1.0, -1.0, -1.0,
-    1.0, -1.0, -1.0,
-    1.0, -1.0, 1.0,
-    -1.0, -1.0, 1.0,
+  for (var longNumber=0; longNumber <= longitudeBands; longNumber++) {
+    var phi = longNumber * 2 * Math.PI / longitudeBands;
+    var sinPhi = Math.sin(phi);
+    var cosPhi = Math.cos(phi);
 
-    // Right face
-    1.0, -1.0, -1.0,
-    1.0, 1.0, -1.0,
-    1.0, 1.0, 1.0,
-    1.0, -1.0, 1.0,
+    var x = cosPhi * sinTheta;
+    var y = cosTheta;
+    var z = sinPhi * sinTheta;
+    var u = 1 - (longNumber / longitudeBands);
+    var v = 1 - (latNumber / latitudeBands);
 
-    // Left face
-    -1.0, -1.0, -1.0,
-    -1.0, -1.0, 1.0,
-    -1.0, 1.0, 1.0,
-    -1.0, 1.0, -1.0
-];
-var CubeVertexNormals = [
-    // Front face
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
+    SphereVertexNormals.push(x);
+    SphereVertexNormals.push(y);
+    SphereVertexNormals.push(z);
+    SphereTextureCoords.push(u);
+    SphereTextureCoords.push(v);
+    SphereVertices.push(radius * x);
+    SphereVertices.push(radius * y);
+    SphereVertices.push(radius * z);
+  }
+}
 
-    // Back face
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
+var SphereVertexIndices = [];
+for (var latNumber=0; latNumber < latitudeBands; latNumber++) {
+  for (var longNumber=0; longNumber < longitudeBands; longNumber++) {
+    var first = (latNumber * (longitudeBands + 1)) + longNumber;
+    var second = first + longitudeBands + 1;
+    SphereVertexIndices.push(first);
+    SphereVertexIndices.push(second);
+    SphereVertexIndices.push(first + 1);
 
-    // Top face
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-
-    // Bottom face
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-
-    // Right face
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-
-    // Left face
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0
-];
-var CubeTextureCoords = [
-    // Front face
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-
-    // Back face
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    0.0, 0.0,
-
-    // Top face
-    0.0, 1.0,
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-
-    // Bottom face
-    1.0, 1.0,
-    0.0, 1.0,
-    0.0, 0.0,
-    1.0, 0.0,
-
-    // Right face
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    0.0, 0.0,
-
-    // Left face
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0
-];
-var CubeVertexIndices = [
-    0, 1, 2, 0, 2, 3,    // Front face
-    4, 5, 6, 4, 6, 7,    // Back face
-    8, 9, 10, 8, 10, 11,  // Top face
-    12, 13, 14, 12, 14, 15, // Bottom face
-    16, 17, 18, 16, 18, 19, // Right face
-    20, 21, 22, 20, 22, 23  // Left face
-];
+    SphereVertexIndices.push(second);
+    SphereVertexIndices.push(second + 1);
+    SphereVertexIndices.push(first + 1);
+  }
+}
 
 var ObstacleVertices = [
     // Front face
@@ -607,8 +537,8 @@ class LevelPiece {
 }
 
 
-var Cube = new GameObject();
-Cube.Size = getObjectSize(CubeVertices);
+var Sphere = new GameObject();
+Sphere.size = getObjectSize(SphereVertices);
 var GroundPlane = new GameObject();
 GroundPlane.Size = getObjectSize(GroundPlaneVertices);
 console.log("GroundPlane size: " + GroundPlane.Size);
@@ -643,7 +573,7 @@ var startingTravelSpeed = 7;
 var speedupFactor = 5;
 var score = 0;
 var jump = false;
-var CubeLane = 0;
+var SphereLane = 0;
 var laneWidth = 4;
 var maxSpeed = 20;
 var objectLeft;
@@ -710,10 +640,10 @@ function generateLevelPart() {
 
 function initializeGame() {
     // Variables for storing current Position of Cube
-    Cube.Position = [0.0, 1, -7.0];
-    Cube.Rotation = [0.0, 0.0, 0.0];
-    Cube.Speed = [0.0, 0.0, 0.0];
-    Cube.RotationSpeed = [0.0, 0.0, 0.0];
+    Sphere.Position = [0.0, 5, -7.0];
+    Sphere.Rotation = [0.0, 0.0, 0.0];
+    Sphere.Speed = [0.0, 0.0, 0.0];
+    Sphere.RotationSpeed = [0.0, 0.0, 0.0];
 
     //Variables for storing world data
     for (var i = 0; i < LevelPart.length; i++) {
@@ -925,12 +855,12 @@ function initTextures() {
 
     //console.log("initializing GroundPlane");
 
-    Cube.Texture = gl.createTexture();
-    Cube.Texture.image = new Image();
-    Cube.Texture.image.onload = function () {
-        handleTextureLoaded(Cube.Texture);
+    Sphere.Texture = gl.createTexture();
+    Sphere.Texture.image = new Image();
+    Sphere.Texture.image.onload = function () {
+        handleTextureLoaded(Sphere.Texture);
     };
-    Cube.Texture.image.src = "./assets/crate.png";
+    Sphere.Texture.image.src = "./assets/crate.png";
 
     //console.log("initializing Cube");
 }
@@ -1007,7 +937,7 @@ function initGameObjectBuffers(gameObject, vertices, vertexNormals, textureCoord
 //
 function initBuffers() {
     initGameObjectBuffers(GroundPlane, GroundPlaneVertices, GroundPlaneVertexNormals, GroundPlaneTextureCoords, GroundPlaneVertexIndices);
-    initGameObjectBuffers(Cube, CubeVertices, CubeVertexNormals, CubeTextureCoords, CubeVertexIndices);
+    initGameObjectBuffers(Sphere, SphereVertices, SphereVertexNormals, SphereTextureCoords, SphereVertexIndices);
     initGameObjectBuffers(Obstacle, ObstacleVertices, ObstacleVertexNormals, ObstacleTextureCoords, ObstacleVertexIndices);
 }
 
@@ -1081,9 +1011,9 @@ function setUpShaderAndLight() {
 
     gl.uniform3f(
         shaderProgram.pointLightingLocationUniform,
-        Cube.Position[0],
-        Cube.Position[1] + 1.5,
-        Cube.Position[2] - 1.5
+        Sphere.Position[0],
+        Sphere.Position[1] + 1.5,
+        Sphere.Position[2] - 1.5
     );
 
     gl.uniform3f(
@@ -1113,11 +1043,11 @@ function drawScene() {
     // ratio and we only want to see objects between 0.1 units
     // and 100 units away from the camera.
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 200.0, pMatrix);
-    setCameraPosition(pMatrix, Cube.Position[0] / 2, Cube.Position[1] / 2 + 5, Cube.Position[2] + 10, 10, 0);
+    setCameraPosition(pMatrix, Sphere.Position[0] / 2, Sphere.Position[1] / 2 + 5, Sphere.Position[2] + 10, 10, 0);
 
     setUpShaderAndLight();
 
-    drawObject(Cube);
+    drawObject(Sphere);
     for (var i = 0; i < LevelPart.length; i++) {
         drawObject(LevelPart[i].Ground);
         for (var j = 0; j < LevelPart[i].gameObject.length; j++) {
@@ -1132,12 +1062,12 @@ function drawScene() {
 // Called every time before redeawing the screen.
 //
 function moveObjects(elapsed) {
-    Cube.Position[0] += Cube.Speed[0] * elapsed / 1000;
-    Cube.Position[1] += Cube.Speed[1] * elapsed / 1000;
-    Cube.Position[2] += Cube.Speed[2] * elapsed / 1000;
-    Cube.Rotation[0] += Cube.RotationSpeed[0] * elapsed / 1000;
-    Cube.Rotation[1] += Cube.RotationSpeed[1] * elapsed / 1000;
-    Cube.Rotation[2] += Cube.RotationSpeed[2] * elapsed / 1000;
+    Sphere.Position[0] += Sphere.Speed[0] * elapsed / 1000;
+    Sphere.Position[1] += Sphere.Speed[1] * elapsed / 1000;
+    Sphere.Position[2] += Sphere.Speed[2] * elapsed / 1000;
+    Sphere.Rotation[0] += Sphere.RotationSpeed[0] * elapsed / 1000;
+    Sphere.Rotation[1] += Sphere.RotationSpeed[1] * elapsed / 1000;
+    Sphere.Rotation[2] += Sphere.RotationSpeed[2] * elapsed / 1000;
     for (var i = 0; i < LevelPart.length; i++) {
         LevelPart[i].partPosition[2] += elapsed * (startingTravelSpeed + speedupFactor * score / 1000) / 1000;
         LevelPart[i].moveComponents();
@@ -1157,53 +1087,53 @@ function animate() {
         // console.log(CubeLane);
         //console.log(CubeLane*laneWidth);
         //console.log(Cube.Position[0]);
-        var distance = laneWidth * CubeLane - Cube.Position[0];
+        var distance = laneWidth * SphereLane - Sphere.Position[0];
         //console.log(distance);
         //console.log(Math.abs((Cube.Speed[0]) * (Cube.Speed[0] / sideAcc)));
         //console.log(Cube.Speed[0]);
 
 
         //console.log(Cube.getObjectInFront());
-        objectFront = Cube.getObjectInFront();
-        objectBottom = Cube.getObjectUnder();
-        objectLeft = Cube.getObjectOnLeft();
-        objectRight = Cube.getObjectOnRight();
+        objectFront = Sphere.getObjectInFront();
+        objectBottom = Sphere.getObjectUnder();
+        objectLeft = Sphere.getObjectOnLeft();
+        objectRight = Sphere.getObjectOnRight();
 
-        if (Cube.hitObjectInFront(objectFront)) {
+        if (Sphere.hitObjectInFront(objectFront)) {
             console.log("hit object in front");
             inGame = false;
         }
 
-        if (jump && Cube.hitObjectUnder(objectBottom)) {
-            Cube.Speed[1] = 20;
+        if (jump && Sphere.hitObjectUnder(objectBottom)) {
+            Sphere.Speed[1] = 20;
             jump = false;
             //console.log("starting jump");
         }
 
-        if (Cube.hitObjectOnLeft(objectLeft)) {
-            Cube.Speed[0] = 0;
-            Cube.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Cube.Size[0] / 2 + 0.001;
+        if (Sphere.hitObjectOnLeft(objectLeft)) {
+            Sphere.Speed[0] = 0;
+            Sphere.Position[0] = objectLeft.Position[0] + objectLeft.Size[0] / 2 + Sphere.Size[0] / 2 + 0.001;
         }
-        if (Cube.hitObjectOnRight(objectRight)) {
-            Cube.Speed[0] = 0;
-            Cube.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Cube.Size[0] / 2 - 0.001;
+        if (Sphere.hitObjectOnRight(objectRight)) {
+            Sphere.Speed[0] = 0;
+            Sphere.Position[0] = objectRight.Position[0] - objectRight.Size[0] / 2 - Sphere.Size[0] / 2 - 0.001;
         }
 
 
-        if (!Cube.hitObjectUnder(objectBottom)) {
-            Cube.Speed[1] -= 60 * elapsed / 1000;
-            Cube.RotationSpeed[0] = -540;
+        if (!Sphere.hitObjectUnder(objectBottom)) {
+            Sphere.Speed[1] -= 60 * elapsed / 1000;
+            Sphere.RotationSpeed[0] = -540;
             //console.log("gravity");
         }
 
         moveObjects(elapsed);
 
-        if (Cube.hitObjectUnder(objectBottom)) {
+        if (Sphere.hitObjectUnder(objectBottom)) {
             //console.log("placed on ground");
-            Cube.Position[1] = objectBottom.Position[1] + objectBottom.Size[1] / 2 + Cube.Size[1] / 2;
-            Cube.Speed[1] = 0;
-            Cube.RotationSpeed[0] = 0;
-            Cube.Rotation[0] = Math.round((Cube.Rotation[0] / 90)) * 90;
+            Sphere.Position[1] = objectBottom.Position[1] + objectBottom.Size[1] / 2 + Sphere.Size[1] / 2;
+            Sphere.Speed[1] = 0;
+            Sphere.RotationSpeed[0] = 0;
+            Sphere.Rotation[0] = Math.round((Sphere.Rotation[0] / 90)) * 90;
             jump = false;
         }
 
@@ -1240,21 +1170,21 @@ function handleKeys() {
 
     if (currentlyPressedKeys[37]) {
         // Left cursor key
-        if (Cube.Speed[0] > -maxSpeed) {
-            Cube.Speed[0] -= 1;
+        if (Sphere.Speed[0] > -maxSpeed) {
+            Sphere.Speed[0] -= 1;
         }
     } else if (currentlyPressedKeys[39]) {
         // Right cursor key
-        if (Cube.Speed[0] < maxSpeed) {
-            Cube.Speed[0] += 1;
+        if (Sphere.Speed[0] < maxSpeed) {
+            Sphere.Speed[0] += 1;
         }
     } else {
-        if (Cube.Speed[0] > 0.5) {
-            Cube.Speed[0] -= 0.9;
-        } else if (Cube.Speed[0] < -0.5) {
-            Cube.Speed[0] += 0.9
+        if (Sphere.Speed[0] > 0.5) {
+            Sphere.Speed[0] -= 0.9;
+        } else if (Sphere.Speed[0] < -0.5) {
+            Sphere.Speed[0] += 0.9
         } else {
-            Cube.Speed[0] = 0;
+            Sphere.Speed[0] = 0;
         }
     }
     if (currentlyPressedKeys[38]) {
